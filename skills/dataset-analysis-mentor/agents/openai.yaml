@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dataset Analysis Mentor"
+  short_description: "Deep dataset analysis and artifact explanation workflow"
+  default_prompt: "Use $dataset-analysis-mentor to deeply analyze this dataset and produce a main report plus per-artifact explanations."

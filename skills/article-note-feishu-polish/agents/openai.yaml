@@ -1,0 +1,4 @@
+interface:
+  display_name: "Article Note Feishu Polish (Merged)"
+  short_description: "Compatibility shim; use Article Note Mentor instead"
+  default_prompt: "The old $article-note-feishu-polish entry has been merged into $article-note-mentor. Use $article-note-mentor for writing, format annotation, Feishu in-place finalization, and Markdown archival."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Article Note Mentor"
+  short_description: "Unified paper-note writing, format annotation, and Feishu finalization"
+  default_prompt: "Use $article-note-mentor to read a paper, build a stable five-part Chinese research note, thicken prerequisites and Work, generate a format-annotation layer, finalize the primary Feishu doc in place, and keep Markdown plus annotation archives for rollback."

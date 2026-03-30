@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read Paper Mentor"
+  short_description: "Interactive academic paper reading and explanation"
+  default_prompt: "Use $read-paper-mentor to read, translate, and explain an academic paper section by section."

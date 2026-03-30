@@ -1,0 +1,4 @@
+interface:
+  display_name: "Teach_Code_Mentor"
+  short_description: "面向课程作业与算法实现的分块代码讲解与教学式辅导技能"
+  default_prompt: "Use $teach-code-mentor to explain this coursework or algorithm implementation step by step in Chinese, grouped by execution flow with complete code blocks and validation guidance."
