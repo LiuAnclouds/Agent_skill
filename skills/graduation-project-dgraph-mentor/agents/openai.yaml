@@ -1,0 +1,5 @@
+interface:
+  display_name: "Graduation Project DGraph Mentor"
+  short_description: "Persistent memory, code map, dataset context, and experiment playbook for Graduation_Project"
+  default_prompt: "Use $graduation-project-dgraph-mentor to load the current Graduation_Project context, refresh the references if needed, and continue the experiment or code task with the correct dataset, code, and AUC target assumptions."
+

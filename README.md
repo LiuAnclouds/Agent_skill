@@ -14,6 +14,8 @@
   - 交互式论文阅读、翻译、公式讲解、实验解释、批判性理解。
 - `teach-code-mentor`
   - 面向教学和自学的代码讲解 skill，适合按执行流或数据流做系统化解释。
+- `graduation-project-dgraph-mentor`
+  - 面向 `Graduation_Project` 的持久化项目上下文 skill。自动维护项目结构、`experiment/` 代码地图、数据集统计、AUC 目标、实验对比规则和最近 5 次变更记忆。
 
 ## 仓库结构
 
@@ -23,6 +25,7 @@ Agent_skill/
 │  ├─ article-note-feishu-polish/
 │  ├─ article-note-mentor/
 │  ├─ dataset-analysis-mentor/
+│  ├─ graduation-project-dgraph-mentor/
 │  ├─ read-paper-mentor/
 │  └─ teach-code-mentor/
 ├─ scripts/
