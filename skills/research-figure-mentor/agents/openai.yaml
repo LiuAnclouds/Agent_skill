@@ -1,0 +1,4 @@
+interface:
+  display_name: "科研画图助手"
+  short_description: "系统图、数据图、模型图的科研级出图、校验与优化工作流"
+  default_prompt: "Use $research-figure-mentor to create a publication-style figure from the provided system description, data artifacts, or model code."

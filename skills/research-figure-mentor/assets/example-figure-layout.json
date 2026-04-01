@@ -1,0 +1,127 @@
+{
+  "task_name": "example-model-overview",
+  "task_type": "model",
+  "canvas": {
+    "width": 1600,
+    "height": 900,
+    "title": "Dynamic Graph Anomaly Detection Model Overview",
+    "background": "#FFFFFF"
+  },
+  "elements": [
+    {
+      "id": "input_nodes",
+      "type": "box",
+      "label": "Target Node Features",
+      "category": "input",
+      "x": 0.06,
+      "y": 0.34,
+      "width": 0.16,
+      "height": 0.12
+    },
+    {
+      "id": "sampler",
+      "type": "box",
+      "label": "Temporal Relation Sampler",
+      "category": "auxiliary",
+      "x": 0.28,
+      "y": 0.31,
+      "width": 0.18,
+      "height": 0.18
+    },
+    {
+      "id": "encoder",
+      "type": "panel",
+      "label": "Modern Relation Blocks x L",
+      "subtitle": "Norm + Residual + FFN + JK",
+      "category": "encoder",
+      "x": 0.52,
+      "y": 0.24,
+      "width": 0.2,
+      "height": 0.32
+    },
+    {
+      "id": "fusion",
+      "type": "box",
+      "label": "Node + Edge + Subgraph Fusion Head",
+      "category": "fusion",
+      "x": 0.78,
+      "y": 0.32,
+      "width": 0.16,
+      "height": 0.16
+    },
+    {
+      "id": "prediction",
+      "type": "box",
+      "label": "Anomaly Logit",
+      "category": "output",
+      "x": 0.79,
+      "y": 0.64,
+      "width": 0.14,
+      "height": 0.1
+    },
+    {
+      "id": "note",
+      "type": "text",
+      "label": "Code-faithful backbone first, paper-style layout second.",
+      "x": 0.06,
+      "y": 0.82,
+      "width": 0.38,
+      "height": 0.05,
+      "font_size": 13,
+      "text_color": "#455A64"
+    },
+    {
+      "id": "a1",
+      "type": "arrow",
+      "from": "input_nodes",
+      "to": "sampler"
+    },
+    {
+      "id": "a2",
+      "type": "arrow",
+      "from": "sampler",
+      "to": "encoder"
+    },
+    {
+      "id": "a3",
+      "type": "arrow",
+      "from": "encoder",
+      "to": "fusion"
+    },
+    {
+      "id": "a4",
+      "type": "arrow",
+      "from": "fusion",
+      "to": "prediction"
+    }
+  ],
+  "legend": [
+    {
+      "label": "Input",
+      "category": "input",
+      "color": "#DCEBFA"
+    },
+    {
+      "label": "Encoder",
+      "category": "encoder",
+      "color": "#F6DDDD"
+    },
+    {
+      "label": "Fusion",
+      "category": "fusion",
+      "color": "#E6DDF6"
+    },
+    {
+      "label": "Output",
+      "category": "output",
+      "color": "#FBE8D8"
+    }
+  ],
+  "reading_order": [
+    "input_nodes",
+    "sampler",
+    "encoder",
+    "fusion",
+    "prediction"
+  ]
+}

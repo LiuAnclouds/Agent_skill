@@ -1,0 +1,30 @@
+{
+  "semantic_blueprint": {
+    "input": "#DCEBFA",
+    "encoder": "#F6DDDD",
+    "pooling": "#E6F2E3",
+    "fusion": "#E6DDF6",
+    "output": "#FBE8D8",
+    "auxiliary": "#ECEFF1",
+    "stroke": "#31445A",
+    "arrow": "#455A64",
+    "highlight": "#C62828"
+  },
+  "data_contrast": {
+    "phase1": "#1F77B4",
+    "phase2": "#D62728",
+    "baseline": "#607D8B",
+    "candidate": "#2E7D32",
+    "warning": "#F39C12",
+    "neutral": "#B0BEC5"
+  },
+  "system_layers": {
+    "client": "#D9EAF7",
+    "service": "#E4F2E2",
+    "compute": "#FBE7DA",
+    "storage": "#E7E0F5",
+    "integration": "#F2F4F5",
+    "stroke": "#37474F",
+    "arrow": "#546E7A"
+  }
+}
