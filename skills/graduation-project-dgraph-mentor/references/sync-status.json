@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-02T16:40:50+08:00",
+  "updated_at": "2026-04-02T17:33:40+08:00",
   "project_root": "/home/moonxkj/Desktop/MyWork/Graduation_Project",
   "monitored_file_count": 83,
   "dataset_file_count": 4,
@@ -12,5 +12,5 @@
     "external_auc": 0.7918046113428173,
     "val_ap": 0.052565046678368345
   },
-  "fingerprint": "728fe7ee2b29b869c65f413499e365a27b32c6fc"
+  "fingerprint": "aae15e5fefe99d3653f876fb39dc328649e700ed"
 }

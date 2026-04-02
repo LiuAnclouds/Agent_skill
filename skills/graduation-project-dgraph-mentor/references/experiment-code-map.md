@@ -319,16 +319,21 @@ Top-level symbols:
 
 Purpose: Project module inside experiment/.
 
-Inventory summary: 0 classes, 7 top-level functions, 0 documented methods.
+Inventory summary: 0 classes, 12 top-level functions, 0 documented methods.
 
 Top-level symbols:
-- `parse_args() -> argparse.Namespace` [function] lines 32-119: CLI argument parser for this module.
-- `_cache_key(args: argparse.Namespace, threshold_day: int) -> str` [function] lines 122-139: Private helper used internally by this module; read together with its callers.
-- `_multiclass_binary_auc(predt: np.ndarray, dmatrix) -> tuple[str, float]` [function] lines 142-149: Metric helper used to evaluate fraud-detection predictions.
-- `_binary_score_from_softprob(prob: np.ndarray) -> np.ndarray` [function] lines 152-154: Private helper used internally by this module; read together with its callers.
-- `_build_sample_weight(y_train: np.ndarray, args: argparse.Namespace, train_first_active: np.ndarray | None = None, threshold_day: int | None = None) -> dict[str, float | dict[str, float]]` [function] lines 157-202: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
-- `_write_feature_importance(booster, feature_names: list[str], path: Path) -> None` [function] lines 205-215: Artifact-writing helper used to persist outputs for later reuse.
-- `main() -> None` [function] lines 218-369: Module entrypoint that orchestrates the main workflow.
+- `parse_args() -> argparse.Namespace` [function] lines 48-152: CLI argument parser for this module.
+- `_cache_key(args: argparse.Namespace, threshold_day: int) -> str` [function] lines 155-178: Private helper used internally by this module; read together with its callers.
+- `_multiclass_binary_auc(predt: np.ndarray, dmatrix) -> tuple[str, float]` [function] lines 181-188: Metric helper used to evaluate fraud-detection predictions.
+- `_binary_score_from_softprob(prob: np.ndarray) -> np.ndarray` [function] lines 191-193: Private helper used internally by this module; read together with its callers.
+- `_build_sample_weight(y_train: np.ndarray, args: argparse.Namespace, train_first_active: np.ndarray | None = None, threshold_day: int | None = None) -> dict[str, float | dict[str, float]]` [function] lines 196-241: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- `_write_feature_importance(booster, feature_names: list[str], path: Path) -> None` [function] lines 244-254: Artifact-writing helper used to persist outputs for later reuse.
+- `_resolved_label_prop_half_lives(args: argparse.Namespace) -> list[float | None]` [function] lines 257-260: Private helper used internally by this module; read together with its callers.
+- `_build_known_label_anchor_matrix(phase: str, labels: np.ndarray, split, num_nodes: int) -> np.ndarray` [function] lines 263-288: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- `_empty_split_mats(split_ids: dict[str, np.ndarray]) -> dict[str, np.ndarray]` [function] lines 291-295: Private helper used internally by this module; read together with its callers.
+- `_build_phase_labelprop_blocks(phase: str, feature_dir: Path, labels: np.ndarray, split, split_ids: dict[str, np.ndarray], label_prop_blocks: list[str], label_prop_half_lives: list[float | None]) -> tuple[dict[str, np.ndarray], list[str]]` [function] lines 298-428: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- `_load_or_build_labelprop_features(args: argparse.Namespace, cache_dir: Path, split, phase1_y: np.ndarray, phase2_y: np.ndarray, phase1_ids: dict[str, np.ndarray], phase2_ids: dict[str, np.ndarray], label_prop_half_lives: list[float | None]) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], list[str]]` [function] lines 431-503: Load helper that restores data, configuration, or saved artifacts from disk.
+- `main() -> None` [function] lines 506-686: Module entrypoint that orchestrates the main workflow.
 
 ## `experiment/training/run_xgb_multiclass_bg_scoreprop.py`
 
