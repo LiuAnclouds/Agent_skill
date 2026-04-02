@@ -12,6 +12,8 @@
   - 深度数据分析工作流，适合 EDA、图数据、时序 / 漂移 / 缺失 / 长尾 / 异常检测场景。
 - `read-paper-mentor`
   - 交互式论文阅读、翻译、公式讲解、实验解释、批判性理解。
+- `research-figure-mentor`
+  - 论文级图表与结构图工作流，适合系统架构图、流程图、数据图、神经网络结构图与两轮校验式出图。
 - `teach-code-mentor`
   - 面向教学和自学的代码讲解 skill，适合按执行流或数据流做系统化解释。
 - `graduation-project-dgraph-mentor`
@@ -43,6 +45,7 @@ Agent_skill/
 │  ├─ graduation-project-dgraph-mentor/
 │  ├─ pua/
 │  ├─ read-paper-mentor/
+│  ├─ research-figure-mentor/
 │  └─ teach-code-mentor/
 ├─ scripts/
 │  ├─ install_windows.ps1
@@ -214,6 +217,7 @@ rsync -a --delete --exclude "__pycache__" --exclude "backups" --exclude "*.pyc" 
 Agent_skill/skills/article-note-mentor        -> <codex-home>/skills/article-note-mentor
 Agent_skill/skills/dataset-analysis-mentor    -> <codex-home>/skills/dataset-analysis-mentor
 Agent_skill/skills/read-paper-mentor          -> <codex-home>/skills/read-paper-mentor
+Agent_skill/skills/research-figure-mentor     -> <codex-home>/skills/research-figure-mentor
 Agent_skill/skills/teach-code-mentor          -> <codex-home>/skills/teach-code-mentor
 Agent_skill/skills/article-note-feishu-polish -> <codex-home>/skills/article-note-feishu-polish
 Agent_skill/skills/pua                        -> <codex-home>/skills/pua
@@ -266,6 +270,7 @@ bash ./scripts/install_unix.sh
 <codex-home>/skills/article-note-mentor/
 <codex-home>/skills/dataset-analysis-mentor/
 <codex-home>/skills/read-paper-mentor/
+<codex-home>/skills/research-figure-mentor/
 <codex-home>/skills/teach-code-mentor/
 <codex-home>/skills/article-note-feishu-polish/
 <codex-home>/skills/pua/
