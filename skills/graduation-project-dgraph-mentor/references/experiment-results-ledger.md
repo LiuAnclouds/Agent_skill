@@ -5,28 +5,29 @@ Rows are sorted by validation AUC descending from saved `summary.json` files und
 ## Best Run Per Family
 
 - `catboost_gpu`: val_auc=0.784853, external_auc=0.784742, path=`experiment/outputs/training/models/catboost_gpu/probe_m3_catboost_gpu/summary.json`
-- `m5_temporal_graphsage`: val_auc=0.786134, external_auc=0.792092, path=`experiment/outputs/training/models/m5_temporal_graphsage/ablate_ratio0/summary.json`
+- `m5_temporal_graphsage`: val_auc=0.787012, external_auc=0.798524, path=`experiment/outputs/training/models/m5_temporal_graphsage/m5_temporal_tb30_seed42_8ep_v2/summary.json`
 - `m6_temporal_gat`: val_auc=0.782811, external_auc=0.794671, path=`experiment/outputs/training/models/m6_temporal_gat/full_hybrid_v1/summary.json`
-- `xgboost_gpu`: val_auc=0.789248, external_auc=0.790223, path=`experiment/outputs/training/models/xgboost_gpu/full_graphprop_m3m2_inout12_v1/summary.json`
+- `xgboost_gpu`: val_auc=0.795341, external_auc=0.791805, path=`experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_v1/summary.json`
 
 | Rank | Family | Run | Path | Val AUC | External AUC | Val AP |
 | --- | --- | --- | --- | ---: | ---: | ---: |
-| 1 | `xgboost_gpu` | `full_graphprop_m3m2_inout12_v1` | `experiment/outputs/training/models/xgboost_gpu/full_graphprop_m3m2_inout12_v1/summary.json` | 0.789248 | 0.790223 | 0.050511 |
-| 2 | `xgboost_gpu` | `probe_m3_xgboost_gpu` | `experiment/outputs/training/models/xgboost_gpu/probe_m3_xgboost_gpu/summary.json` | 0.788915 | 0.790710 | 0.049208 |
-| 3 | `xgboost_gpu` | `probe_m3_graphstats_v1` | `experiment/outputs/training/models/xgboost_gpu/probe_m3_graphstats_v1/summary.json` | 0.788629 | 0.787818 | 0.049539 |
-| 4 | `xgboost_gpu` | `probe_m3_typetime_v1` | `experiment/outputs/training/models/xgboost_gpu/probe_m3_typetime_v1/summary.json` | 0.786862 | 0.787344 | 0.048921 |
-| 5 | `m5_temporal_graphsage` | `ablate_ratio0` | `experiment/outputs/training/models/m5_temporal_graphsage/ablate_ratio0/summary.json` | 0.786134 | 0.792092 | 0.047186 |
-| 6 | `xgboost_gpu` | `probe_m3_aug_v1` | `experiment/outputs/training/models/xgboost_gpu/probe_m3_aug_v1/summary.json` | 0.785677 | 0.789190 | 0.048378 |
-| 7 | `catboost_gpu` | `probe_m3_catboost_gpu` | `experiment/outputs/training/models/catboost_gpu/probe_m3_catboost_gpu/summary.json` | 0.784853 | 0.784742 | 0.052599 |
-| 8 | `m5_temporal_graphsage` | `ablate_ratio5` | `experiment/outputs/training/models/m5_temporal_graphsage/ablate_ratio5/summary.json` | 0.784216 | 0.792938 | 0.047205 |
-| 9 | `m6_temporal_gat` | `full_hybrid_v1` | `experiment/outputs/training/models/m6_temporal_gat/full_hybrid_v1/summary.json` | 0.782811 | 0.794671 | 0.046227 |
-| 10 | `m5_temporal_graphsage` | `ablate_ratio3` | `experiment/outputs/training/models/m5_temporal_graphsage/ablate_ratio3/summary.json` | 0.782558 | 0.793474 | 0.046642 |
-| 11 | `m5_temporal_graphsage` | `cmp_m5_hybrid` | `experiment/outputs/training/models/m5_temporal_graphsage/cmp_m5_hybrid/summary.json` | 0.781776 | 0.794019 | 0.046399 |
-| 12 | `m5_temporal_graphsage` | `ablate_ratio1` | `experiment/outputs/training/models/m5_temporal_graphsage/ablate_ratio1/summary.json` | 0.780264 | 0.792395 | 0.045686 |
-| 13 | `m5_temporal_graphsage` | `m5_hardneg_focalrank_v1` | `experiment/outputs/training/models/m5_temporal_graphsage/m5_hardneg_focalrank_v1/summary.json` | 0.779158 | 0.790592 | 0.045676 |
-| 14 | `xgboost_gpu` | `smoke_covshift_m3_v1` | `experiment/outputs/training/models/xgboost_gpu/smoke_covshift_m3_v1/summary.json` | 0.766460 | 0.784634 | 0.048838 |
-| 15 | `xgboost_gpu` | `smoke_graphprop_m3m2_v1` | `experiment/outputs/training/models/xgboost_gpu/smoke_graphprop_m3m2_v1/summary.json` | 0.759751 | 0.803741 | 0.048445 |
-| 16 | `xgboost_gpu` | `smoke_relmean_m3_alltypes_rawmiss_v1` | `experiment/outputs/training/models/xgboost_gpu/smoke_relmean_m3_alltypes_rawmiss_v1/summary.json` | 0.754235 | 0.788256 | 0.051708 |
-| 17 | `xgboost_gpu` | `probe_m3_with_background_v1` | `experiment/outputs/training/models/xgboost_gpu/probe_m3_with_background_v1/summary.json` | 0.725008 | 0.635772 | 0.029992 |
-| 18 | `m5_temporal_graphsage` | `smoke_hardneg_loss` | `experiment/outputs/training/models/m5_temporal_graphsage/smoke_hardneg_loss/summary.json` | 0.683468 | 0.646904 | 0.063187 |
-| 19 | `m6_temporal_gat` | `smoke_m6_hybrid` | `experiment/outputs/training/models/m6_temporal_gat/smoke_m6_hybrid/summary.json` | 0.664062 | 0.544137 | 0.171891 |
+| 1 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_bw025_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_v1/summary.json` | 0.795341 | 0.791805 | 0.052565 |
+| 2 | `xgboost_gpu` | `multiclass_bg_graphprop_decay90_bw025_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay90_bw025_v1/summary.json` | 0.794696 | 0.794171 | 0.052819 |
+| 3 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_bw010_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw010_v1/summary.json` | 0.794680 | 0.791443 | 0.052173 |
+| 4 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_90_bw025_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_90_bw025_v1/summary.json` | 0.794661 | 0.786716 | 0.053215 |
+| 5 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_v1/summary.json` | 0.794632 | 0.791464 | 0.053329 |
+| 6 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_bw025_baseTB30_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_baseTB30_v1/summary.json` | 0.794605 | 0.791149 | 0.051841 |
+| 7 | `xgboost_gpu` | `multiclass_bg_graphprop_m2base_decay20_bw025_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_m2base_decay20_bw025_v1/summary.json` | 0.794237 | 0.790459 | 0.052729 |
+| 8 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_bw025_fw125_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_fw125_v1/summary.json` | 0.794229 | 0.791302 | 0.052067 |
+| 9 | `xgboost_gpu` | `multiclass_bg_graphprop_decay20_bw025_tb30_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_tb30_v1/summary.json` | 0.794040 | 0.791974 | 0.053233 |
+| 10 | `xgboost_gpu` | `pseudo_decay20_p085_n001_w015_v1` | `experiment/outputs/training/models/xgboost_gpu/pseudo_decay20_p085_n001_w015_v1/summary.json` | 0.793789 | 0.791752 | 0.050240 |
+| 11 | `xgboost_gpu` | `pseudo_decay90_p085_n001_w015_v1` | `experiment/outputs/training/models/xgboost_gpu/pseudo_decay90_p085_n001_w015_v1/summary.json` | 0.793526 | 0.791849 | 0.051541 |
+| 12 | `xgboost_gpu` | `full_temporal_safe_graphprop_decay20_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphprop_decay20_v1/summary.json` | 0.793202 | 0.791488 | 0.051165 |
+| 13 | `xgboost_gpu` | `full_temporal_safe_graphprop_decay90_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphprop_decay90_v1/summary.json` | 0.792824 | 0.792171 | 0.052458 |
+| 14 | `xgboost_gpu` | `multiclass_bg_m3_temporal_tb30_bw050_v1` | `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_m3_temporal_tb30_bw050_v1/summary.json` | 0.792732 | 0.796278 | 0.051499 |
+| 15 | `xgboost_gpu` | `full_temporal_safe_graphprop_decay20_90_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphprop_decay20_90_v1/summary.json` | 0.792236 | 0.787475 | 0.049951 |
+| 16 | `xgboost_gpu` | `full_temporal_safe_graphprop_out1_decay20_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphprop_out1_decay20_v1/summary.json` | 0.792095 | 0.789184 | 0.049851 |
+| 17 | `xgboost_gpu` | `pseudo_temporal_safe_p085_n001_w015_v1` | `experiment/outputs/training/models/xgboost_gpu/pseudo_temporal_safe_p085_n001_w015_v1/summary.json` | 0.791769 | 0.792123 | 0.050710 |
+| 18 | `xgboost_gpu` | `full_temporal_safe_graphprop_decay20_inout12_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphprop_decay20_inout12_v1/summary.json` | 0.791735 | 0.790240 | 0.050436 |
+| 19 | `xgboost_gpu` | `full_temporal_safe_graphstats_sim_graphprop_decay20_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphstats_sim_graphprop_decay20_v1/summary.json` | 0.791561 | 0.787379 | 0.050229 |
+| 20 | `xgboost_gpu` | `full_temporal_safe_graphprop_decay15_v1` | `experiment/outputs/training/models/xgboost_gpu/full_temporal_safe_graphprop_decay15_v1/summary.json` | 0.791510 | 0.788393 | 0.049000 |

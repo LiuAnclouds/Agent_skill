@@ -16,10 +16,11 @@ mkdir -p "$TARGET_ROOT"
 if [[ "$#" -gt 0 ]]; then
   selected=("$@")
 else
+  # Include hidden top-level bundles such as `.system`.
   mapfile -t selected < <(find "$SKILLS_ROOT" -mindepth 1 -maxdepth 1 -type d -printf "%f\n" | sort)
 fi
 
-copy_skill() {
+sync_entry() {
   local src="$1"
   local dst="$2"
 
@@ -27,11 +28,13 @@ copy_skill() {
 
   if command -v rsync >/dev/null 2>&1; then
     rsync -a \
+      --delete \
       --exclude "__pycache__" \
       --exclude "backups" \
       --exclude "*.pyc" \
       "$src"/ "$dst"/
   else
+    find "$dst" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
     cp -R "$src"/. "$dst"/
     find "$dst" -name "__pycache__" -type d -prune -exec rm -rf {} +
     find "$dst" -name "*.pyc" -type f -delete
@@ -44,12 +47,12 @@ for skill in "${selected[@]}"; do
   dst="$TARGET_ROOT/$skill"
 
   if [[ ! -d "$src" ]]; then
-    echo "Skill not found in repository: $skill" >&2
+    echo "Skill or bundle not found in repository: $skill" >&2
     exit 1
   fi
 
-  copy_skill "$src" "$dst"
-  echo "Installed: $skill -> $dst"
+  sync_entry "$src" "$dst"
+  echo "Synced: $skill -> $dst"
 done
 
 echo

@@ -20,7 +20,7 @@ if ($SkillNames -and $SkillNames.Count -gt 0) {
         $selected += ($item -split "," | ForEach-Object { $_.Trim() } | Where-Object { $_ })
     }
 } else {
-    $selected = Get-ChildItem $skillsRoot -Directory | Sort-Object Name | Select-Object -ExpandProperty Name
+    $selected = Get-ChildItem $skillsRoot -Directory -Force | Sort-Object Name | Select-Object -ExpandProperty Name
 }
 
 foreach ($skill in $selected) {
@@ -28,19 +28,19 @@ foreach ($skill in $selected) {
     $dst = Join-Path $targetRoot $skill
 
     if (!(Test-Path $src)) {
-        Write-Error "Skill not found in repository: $skill"
+        Write-Error "Skill or bundle not found in repository: $skill"
         exit 1
     }
 
     New-Item -ItemType Directory -Force -Path $dst | Out-Null
-    robocopy $src $dst /E /XD __pycache__ backups /XF *.pyc | Out-Null
+    robocopy $src $dst /MIR /XD __pycache__ backups /XF *.pyc | Out-Null
 
     if ($LASTEXITCODE -ge 8) {
-        Write-Error "robocopy failed for skill: $skill"
+        Write-Error "robocopy failed for skill or bundle: $skill"
         exit $LASTEXITCODE
     }
 
-    Write-Host "Installed: $skill -> $dst"
+    Write-Host "Synced: $skill -> $dst"
 }
 
 Write-Host ""

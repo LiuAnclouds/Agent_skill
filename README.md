@@ -16,16 +16,32 @@
   - 面向教学和自学的代码讲解 skill，适合按执行流或数据流做系统化解释。
 - `graduation-project-dgraph-mentor`
   - 面向 `Graduation_Project` 的持久化项目上下文 skill。自动维护项目结构、`experiment/` 代码地图、数据集统计、AUC 目标、实验对比规则和最近 5 次变更记忆。
+- `pua`
+  - 在任务反复失败、停滞或被动等待时触发的强约束推进 skill，用来强制扩展排查路径并避免轻易放弃。
+- `.system/`
+  - 同步保存一组系统级 skills 与工具资源，当前包含：
+    - `imagegen`
+    - `openai-docs`
+    - `plugin-creator`
+    - `skill-creator`
+    - `skill-installer`
 
 ## 仓库结构
 
 ```text
 Agent_skill/
 ├─ skills/
+│  ├─ .system/
+│  │  ├─ imagegen/
+│  │  ├─ openai-docs/
+│  │  ├─ plugin-creator/
+│  │  ├─ skill-creator/
+│  │  └─ skill-installer/
 │  ├─ article-note-feishu-polish/
 │  ├─ article-note-mentor/
 │  ├─ dataset-analysis-mentor/
 │  ├─ graduation-project-dgraph-mentor/
+│  ├─ pua/
 │  ├─ read-paper-mentor/
 │  └─ teach-code-mentor/
 ├─ scripts/
@@ -43,7 +59,7 @@ Codex 会从下面的位置自动发现 skills：
 - macOS / Linux 默认路径：`~/.codex/skills/`
 - 如果你设置了 `CODEX_HOME`，则实际路径是：`$CODEX_HOME/skills/`
 
-每个 skill 必须满足这种结构：
+普通 skill 通常满足这种结构：
 
 ```text
 <codex-home>/skills/<skill-name>/SKILL.md
@@ -53,6 +69,12 @@ Codex 会从下面的位置自动发现 skills：
 
 ```text
 C:\Users\<你的用户名>\.codex\skills\article-note-mentor\SKILL.md
+```
+
+系统 bundle 下的 skill 则位于：
+
+```text
+<codex-home>/skills/.system/<skill-name>/SKILL.md
 ```
 
 ## 很重要的目录说明
@@ -78,9 +100,11 @@ skills/Agent_skill/skills/<skill-name>/SKILL.md
 正确做法是：
 
 1. 先把仓库 `git clone` 到任意普通目录。
-2. 再把仓库里的 `skills/*` 同步到本机的 `~/.codex/skills/`。
+2. 再把仓库里的 `skills/` 内容同步到本机的 `~/.codex/skills/`。
 
-本仓库已经提供了安装脚本来做这件事。
+注意：不要在 shell 里直接依赖 `skills/*` 这种 glob 去复制，因为它通常不会包含隐藏目录 `.system/`。
+
+本仓库已经提供了安装脚本来做这件事，默认会镜像同步所有顶层 skill 目录和 `.system/` bundle。
 
 ## 在其他设备上安装
 
@@ -145,18 +169,18 @@ $CODEX_HOME/skills/
 ### Windows
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File D:\tools\Agent_skill\scripts\install_windows.ps1 -SkillNames read-paper-mentor,teach-code-mentor
+powershell -ExecutionPolicy Bypass -File D:\tools\Agent_skill\scripts\install_windows.ps1 -SkillNames read-paper-mentor,pua,.system
 ```
 
 ### macOS / Linux
 
 ```bash
-bash ~/Agent_skill/scripts/install_unix.sh read-paper-mentor teach-code-mentor
+bash ~/Agent_skill/scripts/install_unix.sh read-paper-mentor pua .system
 ```
 
 ## 手动安装
 
-如果你不想用脚本，也可以手动复制：
+如果你不想用脚本，也可以手动镜像复制：
 
 1. 创建目标目录：
 
@@ -164,17 +188,39 @@ bash ~/Agent_skill/scripts/install_unix.sh read-paper-mentor teach-code-mentor
 <codex-home>/skills/
 ```
 
-2. 把仓库里的每个 skill 目录复制进去：
+2. 推荐直接同步整个 `skills/` 目录内容：
 
-```text
-Agent_skill/skills/article-note-mentor          -> <codex-home>/skills/article-note-mentor
-Agent_skill/skills/dataset-analysis-mentor      -> <codex-home>/skills/dataset-analysis-mentor
-Agent_skill/skills/read-paper-mentor            -> <codex-home>/skills/read-paper-mentor
-Agent_skill/skills/teach-code-mentor            -> <codex-home>/skills/teach-code-mentor
-Agent_skill/skills/article-note-feishu-polish   -> <codex-home>/skills/article-note-feishu-polish
+### Windows
+
+```powershell
+robocopy .\skills $env:USERPROFILE\.codex\skills /MIR /XD __pycache__ backups /XF *.pyc
 ```
 
-3. 确认复制后存在：
+如果你设置了 `CODEX_HOME`，把目标目录换成：
+
+```powershell
+$env:CODEX_HOME\skills
+```
+
+### macOS / Linux
+
+```bash
+rsync -a --delete --exclude "__pycache__" --exclude "backups" --exclude "*.pyc" ./skills/ "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+3. 如果你只想手动复制部分目录，至少要显式包含这些路径：
+
+```text
+Agent_skill/skills/article-note-mentor        -> <codex-home>/skills/article-note-mentor
+Agent_skill/skills/dataset-analysis-mentor    -> <codex-home>/skills/dataset-analysis-mentor
+Agent_skill/skills/read-paper-mentor          -> <codex-home>/skills/read-paper-mentor
+Agent_skill/skills/teach-code-mentor          -> <codex-home>/skills/teach-code-mentor
+Agent_skill/skills/article-note-feishu-polish -> <codex-home>/skills/article-note-feishu-polish
+Agent_skill/skills/pua                        -> <codex-home>/skills/pua
+Agent_skill/skills/.system                    -> <codex-home>/skills/.system
+```
+
+4. 确认复制后存在：
 
 ```text
 <codex-home>/skills/<skill-name>/SKILL.md
@@ -222,12 +268,15 @@ bash ./scripts/install_unix.sh
 <codex-home>/skills/read-paper-mentor/
 <codex-home>/skills/teach-code-mentor/
 <codex-home>/skills/article-note-feishu-polish/
+<codex-home>/skills/pua/
+<codex-home>/skills/.system/openai-docs/
 ```
 
-并且每个目录里都应包含 `SKILL.md`。
+并且普通 skill 目录里应包含 `SKILL.md`，`.system/<skill-name>/` 里也应包含 `SKILL.md`。
 
 ## 备注
 
 - `article-note-feishu-polish` 是兼容层，不是新的主流程。需要论文笔记与飞书终稿时，实际能力以 `article-note-mentor` 为准。
 - 部分 skill 依赖你本机已有环境变量或外部服务权限。例如 Feishu 相关流程通常需要本机配置 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`。
-- 仓库里不包含 `.system` 下的系统 skills，只同步个人自用 skills。
+- 安装脚本现在会镜像同步目标目录。也就是说，如果仓库里已经删除某个文件，重新运行安装脚本时，本机对应 skill 目录中的旧文件也会被删除。
+- 仓库包含 `.system/` bundle；如果你手动复制，请不要漏掉这个隐藏目录。

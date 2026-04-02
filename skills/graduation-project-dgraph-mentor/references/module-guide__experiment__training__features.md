@@ -37,7 +37,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `GraphCache`
 
 - Kind: `class`
-- Lines: `25-41`
+- Lines: `31-47`
 - Role: Runtime bundle of CSR-like in/out adjacency arrays, edge metadata, and time-bucket annotations.
 - How to use: Construct or load it once, then pass it downstream instead of repeatedly rebuilding the same context.
 - Side effects / outputs: The class itself is a reusable container or module; concrete side effects come from its methods.
@@ -45,31 +45,31 @@ Read this file before touching model input features, feature normalization, grap
 ### `HybridFeatureNormalizerState`
 
 - Kind: `class`
-- Lines: `45-92`
+- Lines: `51-98`
 - Role: Serializable description of how hybrid feature normalization should be applied at training and inference time.
 - How to use: Read its fields or methods from the surrounding pipeline; this class is usually not invoked directly from the shell.
 - Side effects / outputs: The class itself is a reusable container or module; concrete side effects come from its methods.
 - Important methods:
-  - `to_dict(self) -> dict[str, Any]` lines `59-73`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Serialize the current object into a JSON-safe dict for checkpoints or summaries.
-  - `from_dict(cls, payload: dict[str, Any] | None) -> HybridFeatureNormalizerState | None` lines `76-92`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Reconstruct the object from saved metadata when reloading a run.
+  - `to_dict(self) -> dict[str, Any]` lines `65-79`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Serialize the current object into a JSON-safe dict for checkpoints or summaries.
+  - `from_dict(cls, payload: dict[str, Any] | None) -> HybridFeatureNormalizerState | None` lines `82-98`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Reconstruct the object from saved metadata when reloading a run.
 
 ### `FeatureStore`
 
 - Kind: `class`
-- Lines: `96-158`
+- Lines: `102-164`
 - Role: Memmap-backed feature reader that assembles selected feature groups by node id.
 - How to use: Read its fields or methods from the surrounding pipeline; this class is usually not invoked directly from the shell.
 - Side effects / outputs: The class itself is a reusable container or module; concrete side effects come from its methods.
 - Important methods:
-  - `__init__(self, phase: str, selected_groups: list[str], outdir: Path = FEATURE_OUTPUT_ROOT, normalizer_state: HybridFeatureNormalizerState | None = None) -> None` lines `97-119`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Constructor that wires configuration, dimensions, or cached state before the instance is used downstream.
-  - `_resolve_group_specs(self, selected_groups: list[str]) -> list[dict[str, Any]]` lines `121-139`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
-  - `take_rows(self, node_ids: np.ndarray) -> np.ndarray` lines `141-154`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
-  - `input_dim(self) -> int` lines `157-158`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
+  - `__init__(self, phase: str, selected_groups: list[str], outdir: Path = FEATURE_OUTPUT_ROOT, normalizer_state: HybridFeatureNormalizerState | None = None) -> None` lines `103-125`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Constructor that wires configuration, dimensions, or cached state before the instance is used downstream.
+  - `_resolve_group_specs(self, selected_groups: list[str]) -> list[dict[str, Any]]` lines `127-145`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
+  - `take_rows(self, node_ids: np.ndarray) -> np.ndarray` lines `147-160`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
+  - `input_dim(self) -> int` lines `163-164`: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.. Usage: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
 
 ### `_build_edge_time_windows(timestamps: np.ndarray, n_windows: int = NUM_TIME_WINDOWS) -> list[dict[str, int]]`
 
 - Kind: `function`
-- Lines: `161-182`
+- Lines: `167-188`
 - Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
 - How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
 - Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
@@ -77,7 +77,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_assign_node_time_bucket(first_active: np.ndarray, time_windows: list[dict[str, int]]) -> np.ndarray`
 
 - Kind: `function`
-- Lines: `185-193`
+- Lines: `191-199`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -85,7 +85,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_group_definition() -> tuple[dict[str, list[str]], dict[str, list[str]]]`
 
 - Kind: `function`
-- Lines: `196-261`
+- Lines: `202-390`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -93,7 +93,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_allocate_group_spans(groups: dict[str, list[str]]) -> dict[str, dict[str, Any]]`
 
 - Kind: `function`
-- Lines: `264-274`
+- Lines: `393-403`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -101,7 +101,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_write_graph_arrays(phase_dir: Path, prefix: str, centers: np.ndarray, neighbors: np.ndarray, edge_type: np.ndarray, edge_timestamp: np.ndarray, num_nodes: int) -> dict[str, str]`
 
 - Kind: `function`
-- Lines: `277-308`
+- Lines: `406-437`
 - Role: Artifact-writing helper used to persist outputs for later reuse.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -109,7 +109,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_bincount_float(indices: np.ndarray, weights: np.ndarray, size: int) -> np.ndarray`
 
 - Kind: `function`
-- Lines: `311-312`
+- Lines: `440-441`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -117,7 +117,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_stable_std(value: float) -> float`
 
 - Kind: `function`
-- Lines: `315-316`
+- Lines: `444-445`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -125,15 +125,79 @@ Read this file before touching model input features, feature normalization, grap
 ### `_feature_normalization_type(feature_name: str) -> str`
 
 - Kind: `function`
-- Lines: `319-345`
+- Lines: `448-503`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
 
+### `_safe_ratio(numerator: np.ndarray, denominator: np.ndarray) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `506-507`
+- Role: Private helper used internally by this module; read together with its callers.
+- How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
+- Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
+
+### `_bucketwise_zscore(values: np.ndarray, bucket_ids: np.ndarray, num_buckets: int, valid_mask: np.ndarray | None = None) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `510-556`
+- Role: Private helper used internally by this module; read together with its callers.
+- How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
+- Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
+
+### `_build_temporal_bucket_norm_feature_block(x: np.ndarray, missing_mask: np.ndarray, first_active: np.ndarray, indegree: np.ndarray, outdegree: np.ndarray, bg_in_count: np.ndarray, bg_out_count: np.ndarray) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `559-623`
+- Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
+- Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
+
+### `_build_temporal_safe_feature_blocks(data: PhaseData, time_windows: list[dict[str, int]], node_time_bucket: np.ndarray, first_active: np.ndarray, background_mask: np.ndarray) -> dict[str, np.ndarray]`
+
+- Kind: `function`
+- Lines: `626-753`
+- Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
+- Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
+
+### `_build_activation_early_feature_block(data: PhaseData, first_active: np.ndarray, background_mask: np.ndarray) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `756-820`
+- Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
+- Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
+
+### `_build_temporal_neighbor_feature_block(data: PhaseData, time_windows: list[dict[str, int]], node_time_bucket: np.ndarray, x: np.ndarray, missing_mask: np.ndarray) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `823-870`
+- Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
+- Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
+
+### `_build_graph_stats_feature_block(data: PhaseData, indegree: np.ndarray, outdegree: np.ndarray) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `873-969`
+- Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
+- Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
+
+### `_build_neighbor_similarity_feature_block(x: np.ndarray, missing_mask: np.ndarray, src: np.ndarray, dst: np.ndarray, indegree: np.ndarray, outdegree: np.ndarray) -> np.ndarray`
+
+- Kind: `function`
+- Lines: `972-1010`
+- Role: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
+- How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
+- Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
+
 ### `apply_hybrid_feature_normalizer(features: np.ndarray, state: HybridFeatureNormalizerState) -> np.ndarray`
 
 - Kind: `function`
-- Lines: `348-378`
+- Lines: `1013-1043`
 - Role: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
 - How to use: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -141,7 +205,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `build_hybrid_feature_normalizer(phase: str, selected_groups: list[str], train_ids: np.ndarray, outdir: Path = FEATURE_OUTPUT_ROOT) -> HybridFeatureNormalizerState`
 
 - Kind: `function`
-- Lines: `381-457`
+- Lines: `1046-1122`
 - Role: Fit the hybrid normalization statistics from the phase1 train split only.
 - How to use: Use this when you need to construct the next artifact bundle or derived object before training or reporting.
 - Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
@@ -149,7 +213,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `_build_neighbor_features(data: PhaseData, phase_dir: Path, indegree: np.ndarray, outdegree: np.ndarray, x: np.ndarray, missing_mask: np.ndarray) -> tuple[str, dict[str, dict[str, Any]]]`
 
 - Kind: `function`
-- Lines: `460-513`
+- Lines: `1125-1178`
 - Role: Construct the offline 1-hop neighbor aggregation blocks used by the m3 neighbor feature set.
 - How to use: Internal builder used by the parent public function; modify it when changing how that artifact is assembled.
 - Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
@@ -157,7 +221,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `build_phase_feature_artifacts(phase: str, outdir: Path = FEATURE_OUTPUT_ROOT, build_neighbor: bool = True) -> dict[str, Any]`
 
 - Kind: `function`
-- Lines: `516-710`
+- Lines: `1181-1444`
 - Role: Core offline build path for one phase: core features, optional neighbor features, graph cache, and manifest.
 - How to use: Use this when you need to construct the next artifact bundle or derived object before training or reporting.
 - Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
@@ -165,7 +229,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `build_feature_artifacts(phases: list[str], outdir: Path = FEATURE_OUTPUT_ROOT, build_neighbor: bool = True) -> dict[str, Any]`
 
 - Kind: `function`
-- Lines: `713-732`
+- Lines: `1447-1466`
 - Role: Multi-phase wrapper around build_phase_feature_artifacts().
 - How to use: Use this when you need to construct the next artifact bundle or derived object before training or reporting.
 - Side effects / outputs: Creates a derived bundle that later stages consume; may also write cache files.
@@ -173,7 +237,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `load_feature_manifest(phase: str, outdir: Path = FEATURE_OUTPUT_ROOT) -> dict[str, Any]`
 
 - Kind: `function`
-- Lines: `735-736`
+- Lines: `1469-1470`
 - Role: Read feature_manifest.json for one phase.
 - How to use: Use this to restore cached arrays, saved predictions, or configuration from disk.
 - Side effects / outputs: Reads cached state from disk but should not change model parameters.
@@ -181,7 +245,7 @@ Read this file before touching model input features, feature normalization, grap
 ### `load_graph_cache(phase: str, outdir: Path = FEATURE_OUTPUT_ROOT) -> GraphCache`
 
 - Kind: `function`
-- Lines: `739-763`
+- Lines: `1473-1497`
 - Role: Open the graph cache arrays for one phase as memmaps.
 - How to use: Use this to restore cached arrays, saved predictions, or configuration from disk.
 - Side effects / outputs: Reads cached state from disk but should not change model parameters.
@@ -189,8 +253,16 @@ Read this file before touching model input features, feature normalization, grap
 ### `default_feature_groups(model_name: str) -> list[str]`
 
 - Kind: `function`
-- Lines: `766-784`
+- Lines: `1500-1518`
 - Role: Map each model family name to its default feature-group recipe.
+- How to use: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
+- Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
+
+### `resolve_feature_groups(model_name: str, extra_groups: list[str] | None = None) -> list[str]`
+
+- Kind: `function`
+- Lines: `1521-1529`
+- Role: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
 - How to use: Use this while working on feature extraction or cache reading inside `experiment/training/features.py`.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
 

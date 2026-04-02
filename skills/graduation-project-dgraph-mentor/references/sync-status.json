@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-04-02T10:11:45+08:00",
+  "updated_at": "2026-04-02T16:40:50+08:00",
   "project_root": "/home/moonxkj/Desktop/MyWork/Graduation_Project",
-  "monitored_file_count": 40,
+  "monitored_file_count": 83,
   "dataset_file_count": 4,
   "best_result": {
-    "path": "experiment/outputs/training/models/xgboost_gpu/full_graphprop_m3m2_inout12_v1/summary.json",
-    "model_name": "xgboost_gpu_graphprop",
-    "run_name": "full_graphprop_m3m2_inout12_v1",
+    "path": "experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_v1/summary.json",
+    "model_name": "xgboost_gpu_multiclass_bg_graphprop",
+    "run_name": "multiclass_bg_graphprop_decay20_bw025_v1",
     "family": "xgboost_gpu",
-    "val_auc": 0.7892476514705891,
-    "external_auc": 0.7902232411171587,
-    "val_ap": 0.05051146610185556
+    "val_auc": 0.7953409041935853,
+    "external_auc": 0.7918046113428173,
+    "val_ap": 0.052565046678368345
   },
-  "fingerprint": "129cc50197a111c3b82c8de2bd4390c67854bc33"
+  "fingerprint": "728fe7ee2b29b869c65f413499e365a27b32c6fc"
 }

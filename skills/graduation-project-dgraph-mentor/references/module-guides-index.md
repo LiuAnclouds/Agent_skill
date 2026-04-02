@@ -12,4 +12,9 @@ Use this file as the router into the detailed module-level explanations. Each li
 - [experiment/training/run_training.py](module-guide__experiment__training__run_training.md): Unified CLI for build_features, LightGBM / GNN training, and prediction blending.
 - [experiment/training/run_xgb_covshift.py](module-guide__experiment__training__run_xgb_covshift.md): GPU XGBoost exploration script for covariate-shift weighting between time-split train and val distributions.
 - [experiment/training/run_xgb_graphprop.py](module-guide__experiment__training__run_xgb_graphprop.md): GPU XGBoost exploration script for propagated graph features such as A*X and A^2*X style blocks.
+- [experiment/training/run_xgb_multiclass_bg.py](module-guide__experiment__training__run_xgb_multiclass_bg.md): Project module inside experiment/.
+- [experiment/training/run_xgb_multiclass_bg_graphprop.py](module-guide__experiment__training__run_xgb_multiclass_bg_graphprop.md): Project module inside experiment/.
+- [experiment/training/run_xgb_multiclass_bg_scoreprop.py](module-guide__experiment__training__run_xgb_multiclass_bg_scoreprop.md): Project module inside experiment/.
+- [experiment/training/run_xgb_multiclass_bg_targetenc.py](module-guide__experiment__training__run_xgb_multiclass_bg_targetenc.md): Project module inside experiment/.
+- [experiment/training/run_xgb_pseudo.py](module-guide__experiment__training__run_xgb_pseudo.md): Project module inside experiment/.
 - [experiment/training/run_xgb_relmean.py](module-guide__experiment__training__run_xgb_relmean.md): GPU XGBoost exploration script for relation-specific neighbor mean features.

@@ -31,7 +31,7 @@ Read this file when testing unsupervised covariate-shift weighting between phase
 ### `parse_args() -> argparse.Namespace`
 
 - Kind: `function`
-- Lines: `28-60`
+- Lines: `28-66`
 - Role: CLI argument parser for this module.
 - How to use: Called automatically by `main()` to define the user-facing CLI contract.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -39,15 +39,15 @@ Read this file when testing unsupervised covariate-shift weighting between phase
 ### `_slice_node_ids(node_ids: np.ndarray, limit: int | None, seed: int) -> np.ndarray`
 
 - Kind: `function`
-- Lines: `63-68`
+- Lines: `69-74`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
 
-### `_load_feature_slices(feature_dir: Path, feature_model: str, train_ids: np.ndarray, val_ids: np.ndarray, external_ids: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]`
+### `_load_feature_slices(feature_dir: Path, feature_model: str, extra_groups: list[str] | None, train_ids: np.ndarray, val_ids: np.ndarray, external_ids: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]`
 
 - Kind: `function`
-- Lines: `71-84`
+- Lines: `77-91`
 - Role: Load helper that restores data, configuration, or saved artifacts from disk.
 - How to use: Use this to restore cached arrays, saved predictions, or configuration from disk.
 - Side effects / outputs: Reads cached state from disk but should not change model parameters.
@@ -55,7 +55,7 @@ Read this file when testing unsupervised covariate-shift weighting between phase
 ### `_booster_params(args: argparse.Namespace, scale_pos_weight: float) -> dict[str, float | int | str]`
 
 - Kind: `function`
-- Lines: `87-106`
+- Lines: `94-113`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -63,7 +63,7 @@ Read this file when testing unsupervised covariate-shift weighting between phase
 ### `_domain_params(args: argparse.Namespace) -> dict[str, float | int | str]`
 
 - Kind: `function`
-- Lines: `109-127`
+- Lines: `116-134`
 - Role: Private helper used internally by this module; read together with its callers.
 - How to use: Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice.
 - Side effects / outputs: Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence.
@@ -71,7 +71,7 @@ Read this file when testing unsupervised covariate-shift weighting between phase
 ### `main() -> None`
 
 - Kind: `function`
-- Lines: `130-243`
+- Lines: `137-252`
 - Role: Train a domain classifier between train and val, derive sample weights, and train a weighted CUDA XGBoost fraud model.
 - How to use: Run this through the file's CLI command; `main()` is the terminal-facing orchestration entrypoint.
 - Side effects / outputs: Produces the file's main side effects or terminal outputs.

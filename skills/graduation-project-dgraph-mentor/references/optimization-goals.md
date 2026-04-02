@@ -7,7 +7,7 @@
 - Use GPU in the Graph conda environment for heavy experiments. The user explicitly requested GPU rather than CPU training.
 - Current evidence suggests the hard temporal split is the main bottleneck: phase1 train nodes are much earlier than phase1 val nodes, so distribution shift is severe.
 
-Current best recorded validation AUC is `0.789248` from `experiment/outputs/training/models/xgboost_gpu/full_graphprop_m3m2_inout12_v1/summary.json`; external AUC is `0.790223`.
+Current best recorded validation AUC is `0.795341` from `experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_v1/summary.json`; external AUC is `0.791805`.
 
 ## Open Optimization Directions
 
@@ -21,9 +21,9 @@ Current best recorded validation AUC is `0.789248` from `experiment/outputs/trai
 ## Current Best By Family
 
 - `catboost_gpu`: val_auc=0.784853, external_auc=0.784742, path=`experiment/outputs/training/models/catboost_gpu/probe_m3_catboost_gpu/summary.json`
-- `m5_temporal_graphsage`: val_auc=0.786134, external_auc=0.792092, path=`experiment/outputs/training/models/m5_temporal_graphsage/ablate_ratio0/summary.json`
+- `m5_temporal_graphsage`: val_auc=0.787012, external_auc=0.798524, path=`experiment/outputs/training/models/m5_temporal_graphsage/m5_temporal_tb30_seed42_8ep_v2/summary.json`
 - `m6_temporal_gat`: val_auc=0.782811, external_auc=0.794671, path=`experiment/outputs/training/models/m6_temporal_gat/full_hybrid_v1/summary.json`
-- `xgboost_gpu`: val_auc=0.789248, external_auc=0.790223, path=`experiment/outputs/training/models/xgboost_gpu/full_graphprop_m3m2_inout12_v1/summary.json`
+- `xgboost_gpu`: val_auc=0.795341, external_auc=0.791805, path=`experiment/outputs/training/models/xgboost_gpu/multiclass_bg_graphprop_decay20_bw025_v1/summary.json`
 
 ## Success Ladder
 
