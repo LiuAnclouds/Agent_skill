@@ -1,12 +1,13 @@
 {
-  "updated_at": "2026-04-01T19:45:21+08:00",
+  "updated_at": "2026-04-02T10:11:45+08:00",
   "project_root": "/home/moonxkj/Desktop/MyWork/Graduation_Project",
   "monitored_file_count": 40,
-  "dataset_file_count": 5,
+  "dataset_file_count": 4,
   "best_result": {
     "path": "experiment/outputs/training/models/xgboost_gpu/full_graphprop_m3m2_inout12_v1/summary.json",
     "model_name": "xgboost_gpu_graphprop",
     "run_name": "full_graphprop_m3m2_inout12_v1",
+    "family": "xgboost_gpu",
     "val_auc": 0.7892476514705891,
     "external_auc": 0.7902232411171587,
     "val_ap": 0.05051146610185556

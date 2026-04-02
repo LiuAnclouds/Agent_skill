@@ -27,6 +27,25 @@ LABEL_NAME_MAP = {
     3: "background_3",
 }
 
+TOP_LEVEL_NOTES = {
+    "article": "Research-paper PDFs, reading notes, Feishu exports, and literature support material. Useful for method inspiration, not as executable benchmark truth.",
+    "article_code": "Reference implementations copied from papers or external repos for study, comparison, or selective reuse ideas.",
+    "data": "Auxiliary local data assets outside the main experiment dataset layout if present.",
+    "example": "Small examples or scratch assets used for demonstration rather than core experiments.",
+    "experiment": "The thesis core: EDA, feature building, training entrypoints, model code, and saved outputs.",
+    "other": "Miscellaneous utilities or archived material that is not on the main benchmark path.",
+    ".git": "Git metadata; not part of the modeling pipeline itself.",
+}
+
+IGNORED_TOP_LEVEL_DIRS = {
+    ".claude",
+    ".codex_tmp_skill",
+    ".git",
+    ".idea",
+    "__pycache__",
+    "catboost_info",
+}
+
 FILE_PURPOSES = {
     "experiment/eda/data_loader.py": "Resolve the XinYe dataset paths, flatten arrays, validate schema assumptions, and load one phase into a typed PhaseData container.",
     "experiment/eda/analysis.py": "Run the reproducible EDA stack: overview, feature profile, graph statistics, temporal behavior, drift checks, and the recommended time-aware split.",
@@ -52,6 +71,32 @@ SYMBOL_OVERRIDES = {
     "experiment/eda/run_eda.py": {
         "parse_args": "Parse CLI flags for phase selection, analysis modules, and output directory.",
         "main": "Entrypoint that expands phase selection and launches run_eda().",
+    },
+    "experiment/eda/analysis.py": {
+        "configure_matplotlib": "Set a font stack that can render Chinese labels in generated plots and keep minus signs readable.",
+        "ensure_dir": "Create an artifact directory if missing and return the same path for chained writes.",
+        "write_csv": "Write a list of dict rows into a UTF-8 CSV artifact with stable field ordering.",
+        "write_json": "Persist a JSON summary artifact for later reuse by training or reporting code.",
+        "write_square_csv": "Write a square matrix such as a correlation or PSI-style table with row and column headers.",
+        "label_name": "Map numeric dataset labels to readable names like normal, fraud, and background classes.",
+        "quantile_row": "Convert one numeric vector into a prefixed quantile-stat dict row for CSV summaries.",
+        "basic_stats": "Return a compact statistics dict used inside EDA summaries.",
+        "sample_values": "Downsample large vectors for plotting so EDA remains tractable on million-scale data.",
+        "plot_empirical_cdf": "Draw an empirical CDF curve on an existing matplotlib axis.",
+        "build_time_windows": "Split a time-like vector into quantile-based windows for later temporal summaries.",
+        "build_phase_output_dir": "Create the output subdirectory for a specific phase under the EDA output root.",
+        "get_train_target": "Return the official supervised node ids and labels for one dataset phase.",
+        "analyze_overview": "Produce the high-level size, label, edge-type, and train/test distribution summary for one phase.",
+        "analyze_features": "Profile raw feature distributions, missingness, normal-vs-fraud gaps, and per-group missing patterns.",
+        "compute_degree_arrays": "Compute indegree, outdegree, and total degree arrays from the raw edge list.",
+        "compute_temporal_core": "Compute first_active, last_active, and active_span arrays used throughout EDA and feature building.",
+        "analyze_graph": "Profile graph structure, background-node effects, degree patterns, and edge-type behavior.",
+        "analyze_temporal": "Profile node activity over time, time windows, and train-class temporal behavior.",
+        "_psi": "Compute a population stability style drift score between reference and current distributions.",
+        "_build_drift_bins": "Create quantile-based bins for drift calculations.",
+        "analyze_drift": "Compare phase1 and phase2 feature drift and write a drift summary report.",
+        "build_recommended_split": "Create the project's leakage-safe time-aware phase1 train/val split and phase2 external evaluation ids.",
+        "run_eda": "Execute the requested EDA stages, aggregate summaries, and persist the full artifact bundle.",
     },
     "experiment/training/common.py": {
         "ExperimentSplit": "Container for the recommended phase1 train/val ids plus the phase2 external evaluation ids.",
@@ -80,6 +125,41 @@ SYMBOL_OVERRIDES = {
         "LightGBMExperiment.predict_proba": "Return fraud probabilities for a node-id slice.",
         "LightGBMExperiment.save": "Persist the fitted booster and feature-importance metadata.",
         "LightGBMExperiment.load": "Restore a saved LightGBM experiment from disk.",
+    },
+    "experiment/training/gnn_models.py": {
+        "GraphPhaseContext": "Bundle one phase's feature store, graph cache, and labels so GNN training code can pass context as one object.",
+        "GraphModelConfig": "Serializable configuration object for sampling, loss, normalization, negative sampling, scheduler, and temporal sampling behavior.",
+        "SampledSubgraph": "Container holding the local-node list, sampled edges, relation ids, timestamps, and local target indices for one subgraph batch.",
+        "TrainBatchStats": "Per-batch summary values used in training logs such as sampled subgraph size and positive rate.",
+        "_append_text_line": "Append one human-readable log line to a training log file.",
+        "_append_jsonl": "Append one JSON event line to a jsonl metrics file.",
+        "_write_history_csv": "Materialize the accumulated epoch history as a CSV file.",
+        "_plot_training_curves": "Render loss and metric curves from the stored epoch history.",
+        "_sample_edge_indices": "Choose legal edge indices for one frontier node under fanout and optional temporal cutoff constraints.",
+        "sample_relation_subgraph": "Sample a relation-aware local subgraph around one batch of seed nodes.",
+        "_sample_single_seed_subgraph": "Fast path for single-seed meanmax pooling cases to reduce repeated list / dict construction.",
+        "sample_batched_relation_subgraphs": "Sample multiple seed-node subgraphs together and pack them for batched processing.",
+        "TimeEncoder": "Sinusoidal-like time encoding module used to inject edge-time information into temporal models.",
+        "SafeBatchNorm1d": "BatchNorm wrapper that avoids pathological behavior on very small batches.",
+        "_make_norm": "Factory for layer norm, safe batch norm, or identity normalization.",
+        "_compute_grad_norm": "Measure gradient norm for monitoring and optional clipping diagnostics.",
+        "_focal_bce_with_logits": "Compute the focal BCE variant used when focal loss is enabled.",
+        "_pairwise_ranking_loss": "Compute the ranking term used when ranking-enhanced losses are enabled.",
+        "_dirichlet_energy": "Compute a smoothness-style graph regularity diagnostic on embeddings.",
+        "_pool_mean_max": "Build the mean/max pooled subgraph head input for target-node or subgraph fusion logic.",
+        "_segment_softmax": "Compute softmax values inside grouped edge segments for attention-style aggregation.",
+        "RelationSAGELayer": "Relation-aware SAGE message-passing layer used by the baseline GraphSAGE stack.",
+        "ModernRelationBlock": "Modernized relation block with residual / FFN / normalization options for temporal GraphSAGE variants.",
+        "ModernRelationAttentionBlock": "Attention-based relation block used by the temporal GAT variant.",
+        "RelationGraphSAGENetwork": "Top-level neural network that stacks relation blocks and produces logits for target nodes.",
+        "BaseGraphSAGEExperiment": "Main training / inference wrapper for graph models, including batch building, hard negatives, losses, logging, save/load, and evaluation.",
+        "BaseGraphSAGEExperiment.fit": "Run the full multi-epoch graph training loop, logging metrics and early-stopping on phase1 validation AUC.",
+        "BaseGraphSAGEExperiment.predict_proba": "Run batched subgraph inference and return probabilities for the requested node ids.",
+        "BaseGraphSAGEExperiment.save": "Persist graph model weights and metadata.",
+        "BaseGraphSAGEExperiment.load": "Restore a saved graph experiment from disk.",
+        "RelationGraphSAGEExperiment": "Concrete static relation GraphSAGE experiment wrapper.",
+        "TemporalRelationGraphSAGEExperiment": "Concrete temporal GraphSAGE experiment wrapper.",
+        "TemporalRelationGATExperiment": "Concrete temporal relation attention experiment wrapper.",
     },
     "experiment/training/run_training.py": {
         "parse_args": "Parse the unified CLI for feature building, tabular/GNN training, and blending.",
@@ -164,6 +244,219 @@ OPEN_DIRECTIONS = [
     "Revisit backbone updates such as stronger temporal GAT / Transformer-style modules once a faster feature or sampling baseline is stable.",
     "Consider calibrated ensembling or stacking only after a clearly stronger single-run validation model appears.",
     "Prepare the data-loading layer for future additional datasets; the current repository still assumes only the XinYe DGraph phase1/phase2 layout.",
+]
+
+FILE_GUIDE_NOTES = {
+    "experiment/eda/analysis.py": {
+        "when_to_read": "Read this file when you need to understand where the recommended train/val split comes from, why the current validation regime is time-aware, or how the generated EDA artifacts are produced.",
+        "upstream": ["experiment/eda/run_eda.py"],
+        "downstream": [
+            "experiment/outputs/eda/*.json / *.csv / *.md",
+            "experiment/training/common.py::load_experiment_split",
+            "experiment/training/features.py temporal feature construction",
+        ],
+        "outputs": [
+            "dataset_summary.json",
+            "feature_profile.csv",
+            "graph_profile.csv",
+            "temporal_profile.csv",
+            "drift_summary.md",
+            "recommended_split.json",
+        ],
+        "change_points": [
+            "Modify split strategy here if the project changes its validation philosophy.",
+            "Adjust temporal windows, drift metrics, or artifact set here when EDA requirements expand.",
+        ],
+    },
+    "experiment/eda/data_loader.py": {
+        "when_to_read": "Read this file first when dataset paths change or when the repository needs to support more datasets.",
+        "upstream": [],
+        "downstream": [
+            "experiment/eda/analysis.py",
+            "experiment/training/features.py",
+            "experiment/training/common.py",
+        ],
+        "outputs": ["Validated PhaseData objects in memory"],
+        "change_points": [
+            "Add new dataset filename conventions here.",
+            "Relax or extend schema validation here if later datasets differ from XinYe DGraph.",
+        ],
+    },
+    "experiment/eda/run_eda.py": {
+        "when_to_read": "Read this file when you need the exact EDA CLI surface or want to add a new user-facing EDA command-line option.",
+        "upstream": ["shell / terminal"],
+        "downstream": ["experiment/eda/analysis.py"],
+        "outputs": ["EDA run entrypoint only; artifacts are written by analysis.py"],
+        "change_points": ["Expose new analysis stages or flags here after analysis.py changes."],
+    },
+    "experiment/training/common.py": {
+        "when_to_read": "Read this file when a training change needs new shared metrics, new split loading, or reusable IO helpers.",
+        "upstream": [
+            "experiment/training/run_training.py",
+            "experiment/training/gbdt_models.py",
+            "experiment/training/gnn_models.py",
+            "experiment/training/run_xgb_*.py",
+        ],
+        "downstream": ["All training summaries, predictions, and metric calculations"],
+        "outputs": ["Metric dicts, split bundles, prediction npz files"],
+        "change_points": [
+            "Add new evaluation metrics here if all training flows should report them.",
+            "Do not silently change load_experiment_split unless the evaluation contract changes everywhere.",
+        ],
+    },
+    "experiment/training/features.py": {
+        "when_to_read": "Read this file before touching model input features, feature normalization, graph cache layout, or any offline build logic.",
+        "upstream": [
+            "experiment/training/run_training.py build_features",
+            "experiment/training/run_xgb_graphprop.py",
+            "experiment/training/run_xgb_relmean.py",
+            "experiment/training/run_xgb_covshift.py",
+        ],
+        "downstream": [
+            "FeatureStore consumers in gbdt_models.py and gnn_models.py",
+            "experiment/outputs/training/features/",
+        ],
+        "outputs": [
+            "core_features.npy",
+            "neighbor_features.npy",
+            "feature_manifest.json",
+            "graph/*.npy",
+        ],
+        "change_points": [
+            "Add or remove feature groups here.",
+            "If you change cache layout, update every reader that depends on FeatureStore or GraphCache.",
+        ],
+    },
+    "experiment/training/gbdt_models.py": {
+        "when_to_read": "Read this file when changing the LightGBM baseline behavior inside the unified training CLI.",
+        "upstream": ["experiment/training/run_training.py::run_train_lightgbm"],
+        "downstream": ["Saved LightGBM boosters and feature importance artifacts"],
+        "outputs": ["model.txt", "model_meta.json", "feature_importance.csv"],
+        "change_points": [
+            "Tune baseline tabular behavior here if LightGBM remains part of the benchmark contract.",
+        ],
+    },
+    "experiment/training/gnn_models.py": {
+        "when_to_read": "Read this file when changing graph sampling, temporal handling, losses, hard negatives, the GNN backbone, logging, or inference behavior.",
+        "upstream": ["experiment/training/run_training.py::run_train_graph"],
+        "downstream": [
+            "Per-seed GNN artifacts under experiment/outputs/training/models/",
+            "phase1 val and phase2 external probabilities",
+        ],
+        "outputs": [
+            "train.log",
+            "epoch_metrics.csv / .jsonl",
+            "training_curves.png",
+            "model_meta.json",
+        ],
+        "change_points": [
+            "Backbone architecture edits belong here.",
+            "Sampling strategy and loss experiments also belong here.",
+            "Long-running performance issues usually need inspection here together with features.py.",
+        ],
+    },
+    "experiment/training/run_training.py": {
+        "when_to_read": "Read this file when the user-facing training CLI changes, when a new model family is added to the main benchmark path, or when summary outputs need to change consistently.",
+        "upstream": ["shell / terminal"],
+        "downstream": [
+            "experiment/training/features.py",
+            "experiment/training/gbdt_models.py",
+            "experiment/training/gnn_models.py",
+            "experiment/outputs/training/models/",
+        ],
+        "outputs": ["Unified build/train/blend command surface and summary.json files"],
+        "change_points": [
+            "Add CLI flags here for new model families or new training options.",
+            "Keep summary structure stable if downstream comparison scripts depend on it.",
+        ],
+    },
+    "experiment/training/run_xgb_graphprop.py": {
+        "when_to_read": "Read this file when exploring graph-propagated tabular feature blocks with CUDA XGBoost.",
+        "upstream": ["shell / terminal"],
+        "downstream": ["xgboost_gpu/<run_name>/ summary and predictions"],
+        "outputs": ["summary.json", "phase1_val_predictions.npz", "phase2_external_predictions.npz"],
+        "change_points": ["Graph-propagation feature recipes and caching strategy live here."],
+    },
+    "experiment/training/run_xgb_relmean.py": {
+        "when_to_read": "Read this file when exploring relation-specific neighbor mean features with CUDA XGBoost.",
+        "upstream": ["shell / terminal"],
+        "downstream": ["xgboost_gpu/<run_name>/ summary and predictions"],
+        "outputs": ["summary.json", "feature_importance.csv", "prediction npz files"],
+        "change_points": ["Per-edge-type aggregation logic and cache layout live here."],
+    },
+    "experiment/training/run_xgb_covshift.py": {
+        "when_to_read": "Read this file when testing unsupervised covariate-shift weighting between phase1 train and val.",
+        "upstream": ["shell / terminal"],
+        "downstream": ["xgboost_gpu/<run_name>/ summary and predictions"],
+        "outputs": ["domain_model.json", "model.json", "prediction npz files"],
+        "change_points": ["Domain classifier design and sample-weighting logic live here."],
+    },
+}
+
+MODEL_FAMILY_NOTES = [
+    {
+        "name": "m1_tabular",
+        "type": "baseline",
+        "summary": "Raw node features plus missingness baseline.",
+        "typical_inputs": "Mostly raw phase feature columns with simple missingness support.",
+        "strengths": "Fast, reproducible, and useful as the minimum baseline when graph ideas are not yet validated.",
+        "risks": "Usually too weak to capture multi-hop or relation-specific fraud patterns on its own.",
+        "when_to_use": "Use for sanity checks, feature smoke tests, and the lower bound in ablation tables.",
+    },
+    {
+        "name": "m2_hybrid",
+        "type": "baseline",
+        "summary": "Handcrafted structural, background, edge-type, and time features built in features.py.",
+        "typical_inputs": "Raw node features plus engineered structural and temporal statistics from the offline feature builder.",
+        "strengths": "Captures substantial graph context without paying GNN training cost; strong baseline for fast iteration.",
+        "risks": "Still limited by manual aggregation design and may miss finer temporal interaction patterns.",
+        "when_to_use": "Use when comparing handcrafted feature quality or before spending time on long neural runs.",
+    },
+    {
+        "name": "m3_neighbor",
+        "type": "baseline",
+        "summary": "m2_hybrid plus offline 1-hop neighbor aggregation blocks.",
+        "typical_inputs": "m2 features plus cached neighbor aggregates from offline graph sweeps.",
+        "strengths": "Usually stronger than pure tabular baselines while remaining much faster than online subgraph GNN training.",
+        "risks": "Can become cache-heavy and still lacks adaptive message passing during training.",
+        "when_to_use": "Use as the main fast tabular benchmark and as the feature base for GPU XGBoost probes.",
+    },
+    {
+        "name": "m4_graphsage",
+        "type": "gnn",
+        "summary": "Relation-aware GraphSAGE baseline without explicit temporal encoding.",
+        "typical_inputs": "Sampled local subgraphs with relation ids and node features, but weaker temporal conditioning than m5/m6.",
+        "strengths": "Cleaner baseline for isolating the contribution of online graph message passing itself.",
+        "risks": "May underfit the time-shifted validation regime because temporal structure is only weakly expressed.",
+        "when_to_use": "Use for backbone ablations or when testing whether temporal modules are actually helping.",
+    },
+    {
+        "name": "m5_temporal_graphsage",
+        "type": "gnn",
+        "summary": "Time-aware relation GraphSAGE benchmark with modern training options.",
+        "typical_inputs": "Sampled temporal subgraphs, relation ids, time encodings, and engineered node features.",
+        "strengths": "Current main temporal GraphSAGE benchmark and the most direct continuation of the existing codebase.",
+        "risks": "Sampling cost is high, and stronger fitting does not automatically solve the severe time-shift generalization gap.",
+        "when_to_use": "Use when the experiment specifically targets sampling, losses, temporal encoding, or GraphSAGE-style backbone updates.",
+    },
+    {
+        "name": "m6_temporal_gat",
+        "type": "gnn",
+        "summary": "Temporal relation attention backbone that replaces SAGE aggregation with attention-style message passing.",
+        "typical_inputs": "Same broad graph context as m5, but the backbone uses attention-based aggregation instead of plain SAGE aggregation.",
+        "strengths": "Tests whether relation-aware attention is more expressive than the SAGE baseline under the same data regime.",
+        "risks": "More expressive blocks can be slower and still fail if the bottleneck is feature/split mismatch rather than backbone capacity.",
+        "when_to_use": "Use for architecture upgrades when the user wants a more modern attention-flavored graph backbone.",
+    },
+    {
+        "name": "xgboost_gpu probes",
+        "type": "experimental",
+        "summary": "Fast CUDA XGBoost exploration track for graph-propagation, relation-mean, and covariate-shift ideas.",
+        "typical_inputs": "Cached offline features, propagated blocks, relation-specific aggregates, or unsupervised weighting signals.",
+        "strengths": "Very fast to iterate, cheap to ablate, and useful for deciding whether a hypothesis has signal before a long GNN run.",
+        "risks": "Probe scripts can over-fragment the search space if they are not compared under a disciplined table.",
+        "when_to_use": "Use for quick signal checks, new feature ideas, or domain-shift probes that would be slow to test in a neural pipeline.",
+    },
 ]
 
 
@@ -298,6 +591,93 @@ def heuristic_description(file_rel: str, symbol_name: str, kind: str) -> str:
     return "Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline."
 
 
+def heuristic_usage(file_rel: str, symbol_name: str, kind: str) -> str:
+    note = FILE_GUIDE_NOTES.get(file_rel, {})
+    lowered = symbol_name.lower()
+    if kind == "class":
+        if lowered.endswith("experiment"):
+            return "Instantiate it inside the training entrypoint, then call `fit(...)`, `predict_proba(...)`, and `save(...)` as needed."
+        if lowered.endswith("layer") or lowered.endswith("block") or lowered.endswith("network"):
+            return "Use it only as part of the PyTorch model stack; it is not a standalone CLI entrypoint."
+        if lowered.endswith("cache") or lowered.endswith("context"):
+            return "Construct or load it once, then pass it downstream instead of repeatedly rebuilding the same context."
+        return "Read its fields or methods from the surrounding pipeline; this class is usually not invoked directly from the shell."
+    if lowered == "main":
+        return "Run this through the file's CLI command; `main()` is the terminal-facing orchestration entrypoint."
+    if lowered == "parse_args":
+        return "Called automatically by `main()` to define the user-facing CLI contract."
+    if lowered.startswith("run_"):
+        return "This is a stage-level orchestrator. Prefer calling it indirectly through the module CLI unless you are importing the pipeline programmatically."
+    if lowered.startswith("analyze_"):
+        return "Call this from the EDA pipeline when you want one analysis block plus its artifact writes and summary payload."
+    if lowered.startswith("build_"):
+        return "Use this when you need to construct the next artifact bundle or derived object before training or reporting."
+    if lowered.startswith("_build_"):
+        return "Internal builder used by the parent public function; modify it when changing how that artifact is assembled."
+    if lowered.startswith("load_") or lowered.startswith("_load_"):
+        return "Use this to restore cached arrays, saved predictions, or configuration from disk."
+    if lowered.startswith("save_") or lowered.startswith("_save_") or lowered.startswith("write_"):
+        return "Use this to persist artifacts so later stages can reuse them without recomputation."
+    if lowered.startswith("compute_") or lowered.startswith("safe_"):
+        return "Call this when you need a deterministic derived statistic or robust evaluation metric."
+    if lowered.startswith("sample_") or lowered.startswith("_sample_"):
+        return "Use this to build a local sampled subset or subgraph instead of materializing the full graph structure."
+    if lowered == "fit" or lowered.endswith(".fit"):
+        return "Call after preparing features, node ids, and labels. This is the optimization stage that updates model parameters."
+    if lowered == "predict_proba" or lowered.endswith(".predict_proba"):
+        return "Call on a fitted model to obtain fraud probabilities aligned to the requested node ids."
+    if lowered == "save" or lowered.endswith(".save"):
+        return "Call after a successful fit so later comparison, blending, or deployment steps can reuse the trained artifact."
+    if lowered == "load" or lowered.endswith(".load"):
+        return "Call when you need to reopen a saved training artifact without retraining."
+    if lowered == "forward" or lowered.endswith(".forward"):
+        return "PyTorch forward pass used during training and inference; not a shell-facing entrypoint."
+    if lowered == "__init__" or lowered.endswith(".__init__"):
+        return "Constructor that wires configuration, dimensions, or cached state before the instance is used downstream."
+    if lowered.endswith(".to_dict"):
+        return "Serialize the current object into a JSON-safe dict for checkpoints or summaries."
+    if lowered.endswith(".from_dict"):
+        return "Reconstruct the object from saved metadata when reloading a run."
+    if lowered.endswith(".use_legacy_path"):
+        return "Compatibility helper that tells the caller whether the experiment should fall back to older training logic."
+    if lowered.endswith(".positive_rate"):
+        return "Convenience property used in logging or monitoring to summarize how many positives are in the current batch."
+    if "feature" in lowered and note:
+        return f"Use this while working on feature extraction or cache reading inside `{file_rel}`."
+    return "Use the surrounding file workflow and the listed callers / outputs to decide where this symbol is invoked in practice."
+
+
+def heuristic_effects(file_rel: str, symbol_name: str, kind: str) -> str:
+    note = FILE_GUIDE_NOTES.get(file_rel, {})
+    lowered = symbol_name.lower()
+    if lowered == "main":
+        return "Produces the file's main side effects or terminal outputs."
+    if lowered.startswith("run_"):
+        return "Typically triggers most of the file's intended side effects, including artifact writes or model execution."
+    if lowered.startswith("analyze_"):
+        return "Usually writes plots / tables and returns a structured summary for the phase being analyzed."
+    if lowered.startswith("build_") or lowered.startswith("_build_"):
+        return "Creates a derived bundle that later stages consume; may also write cache files."
+    if lowered.startswith("load_") or lowered.startswith("_load_"):
+        return "Reads cached state from disk but should not change model parameters."
+    if lowered.startswith("save_") or lowered.startswith("_save_") or lowered.startswith("write_"):
+        return "Writes files to disk as its main side effect."
+    if lowered == "fit" or lowered.endswith(".fit"):
+        return "Updates learned model state and often writes logs or checkpoints after training."
+    if lowered == "predict_proba" or lowered.endswith(".predict_proba"):
+        return "Returns probabilities only; persistent outputs happen only if the caller saves them."
+    if lowered == "forward" or lowered.endswith(".forward"):
+        return "Returns tensors for the next layer or final logits; side effects are limited to runtime computation."
+    if kind == "class" and note.get("outputs"):
+        return "The class itself is a reusable container or module; concrete side effects come from its methods."
+    return "Read this together with its caller path to see whether it is pure computation or whether the caller handles persistence."
+
+
+def module_guide_filename(file_rel: str) -> str:
+    stem = file_rel.replace("/", "__").replace(".py", "")
+    return f"module-guide__{stem}.md"
+
+
 def parse_python_inventory(path: Path, project_root: Path) -> list[SymbolDoc]:
     source = path.read_text(encoding="utf-8")
     tree = ast.parse(source)
@@ -345,7 +725,14 @@ def parse_python_inventory(path: Path, project_root: Path) -> list[SymbolDoc]:
 
 
 def collect_project_structure(project_root: Path) -> dict[str, Any]:
-    top_entries = sorted(project_root.iterdir(), key=lambda item: item.name)
+    top_entries = sorted(
+        (
+            item
+            for item in project_root.iterdir()
+            if item.name not in IGNORED_TOP_LEVEL_DIRS
+        ),
+        key=lambda item: item.name,
+    )
     directories = [item.name for item in top_entries if item.is_dir()]
     files = [item.name for item in top_entries if item.is_file()]
     interesting = {}
@@ -365,30 +752,45 @@ def collect_dataset_summary(project_root: Path) -> dict[str, Any]:
     import numpy as np
 
     from experiment.eda.data_loader import load_phase
+    from experiment.eda.analysis import compute_temporal_core
     from experiment.training.common import load_experiment_split
 
     dataset_root = project_root / "experiment" / "dataset"
     dataset_files = sorted(
         str(path.relative_to(project_root))
         for path in dataset_root.rglob("*")
-        if path.is_file()
+        if path.is_file() and ".ipynb_checkpoints" not in path.parts
     )
     phase1 = load_phase("phase1", repo_root=project_root)
     phase2 = load_phase("phase2", repo_root=project_root)
     split = load_experiment_split(project_root / "experiment" / "outputs" / "eda")
+    split_json = safe_json(project_root / "experiment" / "outputs" / "eda" / "recommended_split.json") or {}
+    phase1_temporal = compute_temporal_core(phase1)
+    phase2_temporal = compute_temporal_core(phase2)
 
     def phase_payload(phase: Any, split_ids: np.ndarray | None = None) -> dict[str, Any]:
         labels, counts = np.unique(phase.y, return_counts=True)
+        label_map = {
+            LABEL_NAME_MAP.get(int(label), str(int(label))): int(count)
+            for label, count in zip(labels.tolist(), counts.tolist(), strict=True)
+        }
+        official_train_labels = phase.y[phase.train_mask]
+        train_pos = int(np.sum(official_train_labels == 1))
+        train_neg = int(np.sum(official_train_labels == 0))
+        bg_count = int(label_map.get("background_2", 0) + label_map.get("background_3", 0))
         payload = {
             "num_nodes": int(phase.num_nodes),
             "num_edges": int(phase.num_edges),
             "num_features": int(phase.x.shape[1]),
             "train_size": int(phase.train_mask.size),
             "test_size": int(phase.test_mask.size),
-            "label_counts": {
-                LABEL_NAME_MAP.get(int(label), str(int(label))): int(count)
-                for label, count in zip(labels.tolist(), counts.tolist(), strict=True)
-            },
+            "label_counts": label_map,
+            "official_train_positive_count": train_pos,
+            "official_train_negative_count": train_neg,
+            "official_train_positive_rate": float(train_pos / max(official_train_labels.size, 1)),
+            "official_train_neg_pos_ratio": float(train_neg / max(train_pos, 1)),
+            "background_total_count": bg_count,
+            "avg_edges_per_node": float(phase.num_edges / max(phase.num_nodes, 1)),
         }
         if split_ids is not None and split_ids.size > 0:
             payload["split_positive_rate"] = float(np.mean(phase.y[split_ids] == 1))
@@ -398,6 +800,18 @@ def collect_dataset_summary(project_root: Path) -> dict[str, Any]:
         "dataset_files": dataset_files,
         "phase1": phase_payload(phase1, split.train_ids),
         "phase2": phase_payload(phase2, split.external_ids),
+        "phase1_temporal": {
+            "first_active_min": int(np.min(phase1_temporal["first_active"])),
+            "first_active_median": float(np.median(phase1_temporal["first_active"])),
+            "first_active_max": int(np.max(phase1_temporal["first_active"])),
+            "active_span_median": float(np.median(phase1_temporal["active_span"])),
+        },
+        "phase2_temporal": {
+            "first_active_min": int(np.min(phase2_temporal["first_active"])),
+            "first_active_median": float(np.median(phase2_temporal["first_active"])),
+            "first_active_max": int(np.max(phase2_temporal["first_active"])),
+            "active_span_median": float(np.median(phase2_temporal["active_span"])),
+        },
         "recommended_split": {
             "threshold_day": int(split.threshold_day),
             "train_size": int(split.train_ids.size),
@@ -409,14 +823,23 @@ def collect_dataset_summary(project_root: Path) -> dict[str, Any]:
             "train_positive_rate": float(np.mean(phase1.y[split.train_ids] == 1)),
             "val_positive_rate": float(np.mean(phase1.y[split.val_ids] == 1)),
             "external_positive_rate": float(np.mean(phase2.y[split.external_ids] == 1)),
+            "train_neg_pos_ratio": float(np.sum(phase1.y[split.train_ids] == 0) / max(np.sum(phase1.y[split.train_ids] == 1), 1)),
+            "val_neg_pos_ratio": float(np.sum(phase1.y[split.val_ids] == 0) / max(np.sum(phase1.y[split.val_ids] == 1), 1)),
+            "external_neg_pos_ratio": float(np.sum(phase2.y[split.external_ids] == 0) / max(np.sum(phase2.y[split.external_ids] == 1), 1)),
+            "train_first_active_median": float(split_json.get("phase1_time_split", {}).get("train_first_active_median", 0.0)),
+            "val_first_active_median": float(split_json.get("phase1_time_split", {}).get("val_first_active_median", 0.0)),
         },
     }
 
 
 def collect_code_inventory(project_root: Path) -> list[dict[str, Any]]:
     files = sorted(
-        list((project_root / "experiment" / "eda").glob("*.py"))
-        + list((project_root / "experiment" / "training").glob("*.py"))
+        [
+            path
+            for path in list((project_root / "experiment" / "eda").glob("*.py"))
+            + list((project_root / "experiment" / "training").glob("*.py"))
+            if path.name != "__init__.py"
+        ]
     )
     inventory = []
     for path in files:
@@ -470,6 +893,7 @@ def collect_results(project_root: Path) -> dict[str, Any]:
                 "path": str(path.relative_to(project_root)),
                 "model_name": summary.get("model_name", summary.get("model", path.parent.parent.name)),
                 "run_name": summary.get("run_name", path.parent.name),
+                "family": path.parent.parent.name,
                 "val_auc": val_auc,
                 "external_auc": external_auc,
                 "val_ap": val_ap,
@@ -483,9 +907,15 @@ def collect_results(project_root: Path) -> dict[str, Any]:
         reverse=True,
     )
     best = rows[0] if rows else None
+    best_by_family: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        family = str(row["family"])
+        if family not in best_by_family:
+            best_by_family[family] = row
     return {
         "rows": rows,
         "best": best,
+        "best_by_family": best_by_family,
     }
 
 
@@ -556,6 +986,251 @@ def update_recent_changes(skill_root: Path, project_root: Path, args: argparse.N
     return entries
 
 
+def render_symbol_detail(file_rel: str, symbol: SymbolDoc) -> list[str]:
+    lines = [
+        f"### `{symbol.signature}`",
+        "",
+        f"- Kind: `{symbol.kind}`",
+        f"- Lines: `{symbol.start_line}-{symbol.end_line}`",
+        f"- Role: {symbol.description}",
+        f"- How to use: {heuristic_usage(file_rel, symbol.name, symbol.kind)}",
+        f"- Side effects / outputs: {heuristic_effects(file_rel, symbol.name, symbol.kind)}",
+    ]
+    if symbol.methods:
+        lines.append("- Important methods:")
+        for method in symbol.methods:
+            lines.append(
+                f"  - `{method.signature}` lines `{method.start_line}-{method.end_line}`: {method.description}. Usage: {heuristic_usage(file_rel, method.name, 'method')}"
+            )
+    lines.append("")
+    return lines
+
+
+def render_module_guide(file_info: dict[str, Any]) -> str:
+    file_rel = str(file_info["path"])
+    note = FILE_GUIDE_NOTES.get(file_rel, {})
+    lines = [
+        f"# Module Guide: `{file_rel}`",
+        "",
+        f"## Purpose",
+        "",
+        file_info["purpose"],
+        "",
+        "## When To Read This File",
+        "",
+        note.get("when_to_read", "Read this file when its module role matches the current task."),
+        "",
+        "## Upstream Callers / Entrypoints",
+        "",
+    ]
+    for item in note.get("upstream", ["No specific upstream note recorded."]):
+        lines.append(f"- {item}")
+    lines.extend(["", "## Downstream Consumers / Artifacts", ""])
+    for item in note.get("downstream", ["No specific downstream note recorded."]):
+        lines.append(f"- {item}")
+    lines.extend(["", "## Main Outputs Or Side Effects", ""])
+    for item in note.get("outputs", ["See the symbol list below."]):
+        lines.append(f"- {item}")
+    lines.extend(["", "## Common Edit Hotspots", ""])
+    for item in note.get("change_points", ["No custom change hotspot note recorded."]):
+        lines.append(f"- {item}")
+    lines.extend(["", "## Top-Level Symbols", ""])
+    if not file_info["symbols"]:
+        lines.append("No top-level symbols found.")
+        lines.append("")
+        return "\n".join(lines) + "\n"
+    for symbol in file_info["symbols"]:
+        lines.extend(render_symbol_detail(file_rel, symbol))
+    return "\n".join(lines) + "\n"
+
+
+def render_module_guides_index(code_inventory: list[dict[str, Any]]) -> str:
+    lines = [
+        "# Module Guides Index",
+        "",
+        "Use this file as the router into the detailed module-level explanations. Each linked guide expands one `experiment/` Python file with purpose, caller path, side effects, and top-level symbol notes.",
+        "",
+    ]
+    for file_info in code_inventory:
+        filename = module_guide_filename(str(file_info["path"]))
+        lines.append(f"- [{file_info['path']}]({filename}): {file_info['purpose']}")
+    return "\n".join(lines) + "\n"
+
+
+def render_project_handbook(structure: dict[str, Any]) -> str:
+    lines = [
+        "# Project Handbook",
+        "",
+        "This file acts as the missing root-level README for the thesis engineering repository.",
+        "",
+        "## What This Project Is Trying To Do",
+        "",
+        "The repository is a dynamic-graph anti-fraud graduation project built around the XinYe DGraph benchmark. It combines reproducible EDA, offline feature building, relation-aware GNN training, and fast GPU tabular probes so the team can iterate on leakage-safe experiments rather than ad-hoc notebooks.",
+        "",
+        "## High-Level Pipeline",
+        "",
+        "1. Load the raw phase1 / phase2 npz files through `experiment/eda/data_loader.py`.",
+        "2. Run EDA through `experiment/eda/analysis.py` and save the recommended time-aware split plus artifact tables.",
+        "3. Build offline feature caches and graph caches through `experiment/training/features.py`.",
+        "4. Train baseline tabular or GNN models through `experiment/training/run_training.py`.",
+        "5. Run faster exploratory GPU XGBoost probes through `experiment/training/run_xgb_*.py`.",
+        "6. Compare `summary.json` outputs under `experiment/outputs/training/models/`.",
+        "",
+        "## Top-Level Folders And Why They Exist",
+        "",
+    ]
+    for name in structure["directories"]:
+        note = TOP_LEVEL_NOTES.get(name, "Top-level repository directory with project-specific material.")
+        lines.append(f"- `{name}/`: {note}")
+    lines.extend(
+        [
+            "",
+            "## Repository Navigation Strategy",
+            "",
+            "When a new session starts, do not scan the whole repository blindly. Route by task type:",
+            "",
+            "- If the task is about data meaning, distribution, or split logic, start from `experiment/eda/` and `references/dataset-profile.md`.",
+            "- If the task is about model inputs or cached artifacts, start from `experiment/training/features.py` and `experiment/training/README_features.md`.",
+            "- If the task is about training behavior, metrics, speed, or GPU usage, start from `experiment/training/run_training.py` and `experiment/training/gnn_models.py`.",
+            "- If the task is about comparing completed runs, start from `experiment/outputs/training/models/` and `references/experiment-results-ledger.md`.",
+            "- If the task is about future research direction, open `references/optimization-goals.md` and the saved paper notes under `article/`.",
+            "",
+            "## Recommended Reading Order For A New Session",
+            "",
+            "1. `references/project-overview.md`",
+            "2. `references/dataset-profile.md`",
+            "3. `references/experiment-playbook.md`",
+            "4. `references/optimization-goals.md`",
+            "5. `references/module-guides-index.md`",
+            "6. The module guide for the file you are about to change",
+            "7. `experiment/training/README_features.md` and `experiment/training/README_gnn_models.md` for the existing long-form manual explanations",
+            "",
+            "## Typical Task Routing",
+            "",
+            "- Dataset path or schema issue: start from `experiment/eda/data_loader.py`.",
+            "- Split / drift / imbalance question: start from `experiment/eda/analysis.py` and `references/dataset-profile.md`.",
+            "- Feature engineering or graph cache question: start from `experiment/training/features.py`.",
+            "- User-facing training CLI or summary output question: start from `experiment/training/run_training.py`.",
+            "- Backbone, sampling, loss, or GNN speed / accuracy question: start from `experiment/training/gnn_models.py`.",
+            "- Fast GPU tabular exploration question: start from `experiment/training/run_xgb_graphprop.py`, `run_xgb_relmean.py`, or `run_xgb_covshift.py`.",
+            "",
+            "## What Must Stay Stable Across Sessions",
+            "",
+            "- The project's main evaluation contract is the leakage-safe time-aware split produced by EDA.",
+            "- `phase1_val_auc` is the main internal benchmark target and should not be replaced casually by a different metric.",
+            "- `summary.json` is the comparison artifact that lets later sessions reason about prior work without rerunning everything.",
+            "- The skill itself is meant to be refreshed after code, dataset, feature-cache, or result changes so future sessions inherit the updated state.",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def render_experiment_architecture() -> str:
+    lines = [
+        "# Experiment Architecture",
+        "",
+        "## End-To-End Data Flow",
+        "",
+        "```text",
+        "raw phase1/phase2 npz",
+        "-> experiment/eda/data_loader.py",
+        "-> experiment/eda/analysis.py",
+        "-> recommended_split.json + EDA artifacts",
+        "-> experiment/training/features.py build_feature_artifacts",
+        "-> feature caches + graph caches",
+        "-> experiment/training/run_training.py or run_xgb_*.py",
+        "-> experiment/outputs/training/models/<family>/<run_name>/summary.json",
+        "```",
+        "",
+        "## Model Families",
+        "",
+    ]
+    for item in MODEL_FAMILY_NOTES:
+        lines.append(f"- `{item['name']}` [{item['type']}]: {item['summary']}")
+    lines.extend(
+        [
+            "",
+            "## Model Family Detail",
+            "",
+        ]
+    )
+    for item in MODEL_FAMILY_NOTES:
+        lines.extend(
+            [
+                f"### `{item['name']}`",
+                "",
+                f"- Type: `{item['type']}`",
+                f"- Core idea: {item['summary']}",
+                f"- Typical inputs: {item.get('typical_inputs', 'See the relevant training file.')}",
+                f"- Strengths: {item.get('strengths', 'No explicit note recorded.')}",
+                f"- Risks: {item.get('risks', 'No explicit note recorded.')}",
+                f"- When to use: {item.get('when_to_use', 'Use when it matches the current ablation goal.')}",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## Key Contracts",
+            "",
+            "- `experiment/outputs/eda/recommended_split.json` defines the main evaluation split contract.",
+            "- `FeatureStore` and `GraphCache` are the stable runtime interfaces between offline build and training.",
+            "- `summary.json` is the stable comparison artifact for every meaningful experiment run.",
+            "",
+            "## Artifact Layers",
+            "",
+            "- Raw dataset layer: `experiment/dataset/phase*_gdata.npz`",
+            "- EDA layer: `experiment/outputs/eda/` tables, plots, markdown reports, and `recommended_split.json`",
+            "- Cache layer: `experiment/outputs/training/features/` memmaps, manifests, and graph arrays",
+            "- Training run layer: `experiment/outputs/training/models/<family>/<run_name>/`",
+            "- Skill memory layer: this skill's generated markdown bundle summarizing the live repository state",
+            "",
+            "## Why This Architecture Exists",
+            "",
+            "- The dataset is too large for repeated full recomputation during every run.",
+            "- Validation is deliberately time-shifted, so experiments need to be reproducible and leakage-safe.",
+            "- GNN experiments are slow, so faster GPU tabular probes are needed as a side track for hypothesis testing.",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def render_module_update_hotspots() -> str:
+    lines = [
+        "# Module Update Hotspots",
+        "",
+        "Use this file when you already know the type of change you want to make but do not yet know which files to edit.",
+        "",
+        "## If You Want To Add A New Dataset",
+        "",
+        "- `experiment/eda/data_loader.py`: add filename resolution and validation logic.",
+        "- `experiment/eda/analysis.py`: make sure EDA and split logic still work on the new dataset.",
+        "- `references/dataset-profile.md`: the sync script will refresh counts once the loader can see the new data.",
+        "",
+        "## If You Want To Add Or Change Features",
+        "",
+        "- `experiment/training/features.py`: add feature construction, manifest spans, and any cache writes.",
+        "- `experiment/training/run_training.py`: expose the new feature usage if a model family or CLI flag needs to select it.",
+        "- Any probe script under `experiment/training/run_xgb_*.py` that should consume the new feature recipe.",
+        "",
+        "## If You Want To Change The GNN Backbone",
+        "",
+        "- `experiment/training/gnn_models.py`: message passing blocks, loss logic, batch construction, logging, and inference live here.",
+        "- `experiment/training/run_training.py`: model choices and CLI exposure live here.",
+        "- `experiment/training/README_gnn_models.md`: existing hand-written explanation may need updating if you want the manual docs to stay aligned.",
+        "",
+        "## If You Want To Change Evaluation Or Metrics",
+        "",
+        "- `experiment/training/common.py`: shared metric definitions.",
+        "- `experiment/training/run_training.py`: which metrics are surfaced into summaries.",
+        "- `experiment/training/gnn_models.py`: per-epoch logging and curve generation.",
+        "",
+        "## If You Want Faster Iteration On New Ideas",
+        "",
+        "- Prefer `run_xgb_graphprop.py`, `run_xgb_relmean.py`, and `run_xgb_covshift.py` before launching a very long GNN run.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_project_overview(structure: dict[str, Any]) -> str:
     lines = [
         "# Project Overview",
@@ -568,12 +1243,21 @@ def render_project_overview(structure: dict[str, Any]) -> str:
         "",
     ]
     for name in structure["directories"]:
-        lines.append(f"- `{name}/`")
+        lines.append(f"- `{name}/`: {TOP_LEVEL_NOTES.get(name, 'Top-level repository directory with project-specific material.')}")
     if structure["files"]:
         lines.append("")
         lines.append("Top-level files:")
         for name in structure["files"]:
             lines.append(f"- `{name}`")
+    lines.extend(
+        [
+            "",
+            "## Directory Snapshots",
+            "",
+        ]
+    )
+    for root_name, children in structure["interesting_children"].items():
+        lines.append(f"- `{root_name}/`: {', '.join(children)}")
     lines.extend(
         [
             "",
@@ -586,12 +1270,25 @@ def render_project_overview(structure: dict[str, Any]) -> str:
             "- `experiment/dataset/`: current XinYe dataset files. The repository currently supports only this dataset family, but the design should evolve toward multi-dataset support.",
             "- `article/` and `article_code/`: paper PDFs, notes, and reference implementations used for research comparison or inspiration rather than direct benchmark truth.",
             "",
+            "## Core Engineering Contracts",
+            "",
+            "- EDA builds the leakage-safe split contract. Training code should consume that split rather than inventing a new one silently.",
+            "- Feature caches are reusable assets. Rebuild them only when the raw dataset, feature logic, or cache schema changes.",
+            "- Every serious run should produce a persistent directory with `summary.json` so later sessions can compare methods without depending on memory.",
+            "- The project is being used for a thesis, so reproducibility and the ability to explain each module matter as much as one-off metric wins.",
+            "",
             "## Existing Human-Written Project Docs",
             "",
             "- The repository currently has no root-level README for the thesis project.",
             "- The most important hand-written walkthroughs are:",
             "  - `experiment/training/README_features.md` for the feature-cache and graph-cache pipeline.",
             "  - `experiment/training/README_gnn_models.md` for the GNN implementation and execution flow.",
+            "",
+            "## Why The Skill Exists",
+            "",
+            "- New chats should not need to rediscover where the split comes from, what each experiment file does, or which runs were already tried.",
+            "- The skill acts as persistent project memory, generated from the live repository rather than handwritten once and left stale.",
+            "- Auto-sync keeps the context current after model, feature, dataset, or result changes, with recent-memory capped to the latest five milestones.",
             "",
             "## Current Focus",
             "",
@@ -607,6 +1304,8 @@ def render_dataset_profile(dataset: dict[str, Any]) -> str:
     split = dataset["recommended_split"]
     phase1 = dataset["phase1"]
     phase2 = dataset["phase2"]
+    phase1_temporal = dataset["phase1_temporal"]
+    phase2_temporal = dataset["phase2_temporal"]
     lines = [
         "# Dataset Profile",
         "",
@@ -620,10 +1319,20 @@ def render_dataset_profile(dataset: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Dataset Interpretation",
+            "",
+            "- `phase1` is the main source for supervised model development and for the time-aware train/validation split used throughout the project.",
+            "- `phase2` is treated as the external robustness check after a model is chosen on phase1 validation.",
+            "- The skill should be refreshed if these files change, if new dataset files are introduced, or if the loader begins supporting more than the current XinYe layout.",
+            "",
             "## Phase Summary",
             "",
             f"- `phase1`: nodes={phase1['num_nodes']}, edges={phase1['num_edges']}, features={phase1['num_features']}, official_train={phase1['train_size']}, official_test={phase1['test_size']}",
             f"- `phase2`: nodes={phase2['num_nodes']}, edges={phase2['num_edges']}, features={phase2['num_features']}, official_train={phase2['train_size']}, official_test={phase2['test_size']}",
+            f"- `phase1` official train positive rate: `{phase1['official_train_positive_rate']:.6f}`, neg/pos ratio: `{phase1['official_train_neg_pos_ratio']:.2f}`",
+            f"- `phase2` official train positive rate: `{phase2['official_train_positive_rate']:.6f}`, neg/pos ratio: `{phase2['official_train_neg_pos_ratio']:.2f}`",
+            f"- Background nodes are numerous: phase1 background total `{phase1['background_total_count']}`, phase2 background total `{phase2['background_total_count']}`",
+            f"- Average edges per node: phase1 `{phase1['avg_edges_per_node']:.4f}`, phase2 `{phase2['avg_edges_per_node']:.4f}`",
             "",
             "## Labels",
             "",
@@ -643,19 +1352,50 @@ def render_dataset_profile(dataset: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Temporal Snapshot",
+            "",
+            f"- phase1 first_active median: `{phase1_temporal['first_active_median']:.2f}` (min `{phase1_temporal['first_active_min']}`, max `{phase1_temporal['first_active_max']}`)",
+            f"- phase2 first_active median: `{phase2_temporal['first_active_median']:.2f}` (min `{phase2_temporal['first_active_min']}`, max `{phase2_temporal['first_active_max']}`)",
+            f"- phase1 active_span median: `{phase1_temporal['active_span_median']:.2f}`",
+            f"- phase2 active_span median: `{phase2_temporal['active_span_median']:.2f}`",
+            "",
             "## Recommended Evaluation Split",
             "",
             f"- Time threshold day: `{split['threshold_day']}`",
             f"- phase1 train size: `{split['train_size']}` with `{split['train_positive_count']}` fraud nodes, positive rate `{split['train_positive_rate']:.6f}`",
             f"- phase1 val size: `{split['val_size']}` with `{split['val_positive_count']}` fraud nodes, positive rate `{split['val_positive_rate']:.6f}`",
             f"- phase2 external size: `{split['external_size']}` with `{split['external_positive_count']}` fraud nodes, positive rate `{split['external_positive_rate']:.6f}`",
+            f"- phase1 train neg/pos ratio: `{split['train_neg_pos_ratio']:.2f}`",
+            f"- phase1 val neg/pos ratio: `{split['val_neg_pos_ratio']:.2f}`",
+            f"- phase2 external neg/pos ratio: `{split['external_neg_pos_ratio']:.2f}`",
+            f"- phase1 train first_active median: `{split['train_first_active_median']:.2f}`",
+            f"- phase1 val first_active median: `{split['val_first_active_median']:.2f}`",
             "",
             "This split is strongly time-shifted: the validation nodes are later than the training nodes. Treat this as the main generalization challenge when AUC stalls around 0.79.",
+            "",
+            "## What The Split Means Operationally",
+            "",
+            "- Training code should fit only on `phase1` train ids from `recommended_split.json`.",
+            "- Model selection should use `phase1` val ids from the same split.",
+            "- External reporting should use `phase2` external ids after model selection, not to tune every idea.",
+            "- If a method uses temporal information, later validation or external labels must never leak into earlier supervised training decisions.",
+            "",
+            "## Why The Imbalance Matters",
+            "",
+            "- Fraud nodes are rare relative to normal nodes in every supervised split, so AP / PR-AUC are informative diagnostics even when ROC-AUC remains the main target.",
+            "- Because the time-aware validation split is later than training, class imbalance interacts with distribution shift rather than standing alone.",
+            "",
+            "## When To Rebuild Features Or EDA",
+            "",
+            "- Rerun EDA if the dataset files change, if the split policy changes, or if new temporal statistics are needed.",
+            "- Rebuild feature caches if the raw dataset changed, if `features.py` changed, or if the manifest / cache schema changed.",
+            "- Do not rebuild caches only because a model hyperparameter changed; model-only experiments should reuse the existing caches when the input definition is unchanged.",
             "",
             "## Dataset Expansion Notes",
             "",
             "- The current `experiment/eda/data_loader.py` resolves only `phase1_gdata.npz` and `phase2_gdata.npz`.",
             "- To add new datasets later, extend the dataset resolver and keep the sync script aware of the new dataset inventory so the skill remains current.",
+            "- A future multi-dataset version of this project should expose dataset selection explicitly at the CLI and in the generated skill references.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -667,11 +1407,22 @@ def render_code_map(code_inventory: list[dict[str, Any]]) -> str:
         "",
         "This document is generated from the live repository. It focuses on `experiment/` because that is the benchmark and thesis core.",
         "",
+        "Use this file as the fast index. For deeper per-file explanations, jump to `references/module-guides-index.md` and then open the guide for the target module.",
+        "",
     ]
     for file_info in code_inventory:
+        class_count = sum(1 for symbol in file_info["symbols"] if symbol.kind == "class")
+        function_count = sum(1 for symbol in file_info["symbols"] if symbol.kind == "function")
+        method_count = sum(len(symbol.methods) for symbol in file_info["symbols"])
         lines.append(f"## `{file_info['path']}`")
         lines.append("")
         lines.append(f"Purpose: {file_info['purpose']}")
+        note = FILE_GUIDE_NOTES.get(str(file_info["path"]), {})
+        if note.get("when_to_read"):
+            lines.append("")
+            lines.append(f"When to read: {note['when_to_read']}")
+        lines.append("")
+        lines.append(f"Inventory summary: {class_count} classes, {function_count} top-level functions, {method_count} documented methods.")
         lines.append("")
         if not file_info["symbols"]:
             lines.append("No top-level symbols found.")
@@ -691,6 +1442,7 @@ def render_code_map(code_inventory: list[dict[str, Any]]) -> str:
 
 
 def render_experiment_playbook(project_root: Path) -> str:
+    _ = project_root
     lines = [
         "# Experiment Playbook",
         "",
@@ -699,6 +1451,7 @@ def render_experiment_playbook(project_root: Path) -> str:
         "- Activate the `Graph` conda environment before training or feature builds.",
         "- Prefer `python3`, not `python`, because the system default `python` may not point to the intended interpreter.",
         "- Use GPU for heavy training unless the task is explicitly a lightweight CPU smoke test.",
+        "- Keep the same CUDA-visible environment and dependency set across comparison runs whenever possible.",
         "",
         "## Core Commands",
         "",
@@ -732,28 +1485,75 @@ def render_experiment_playbook(project_root: Path) -> str:
         "python3 experiment/training/run_xgb_covshift.py --run-name <name> --device cuda",
         "```",
         "",
-        "## How To Compare Experiments",
+        "## When To Rebuild What",
         "",
-        "1. Keep the same recommended split unless the experiment is explicitly about split design.",
-        "2. Compare `phase1_val_auc` first because that is the user's main thesis target.",
-        "3. Check `phase2_external_auc` next to reject fragile improvements.",
-        "4. Use the same feature build and environment when running ablations.",
-        "5. Record the run directory and `summary.json` path for every experiment worth keeping.",
-        "6. For GNN runs, inspect `train.log`, `epoch_metrics.csv`, and `training_curves.png` before deciding the run has really failed.",
+        "- Rerun EDA when the raw dataset changes, when the split policy changes, or when temporal/drift analysis needs new artifacts.",
+        "- Rebuild feature caches when `features.py` changes, when the feature manifest changes, or when the underlying dataset changed.",
+        "- Reuse existing caches when only hyperparameters, losses, samplers, or backbone blocks changed.",
+        "- Do not casually mix runs built from different cache generations without writing that difference down in the comparison table.",
         "",
-        "## Reading Outputs",
+        "## Model Family Intent",
         "",
-        "- EDA outputs live under `experiment/outputs/eda/`.",
-        "- Feature caches live under `experiment/outputs/training/features/`.",
-        "- Model runs live under `experiment/outputs/training/models/<model>/<run_name>/`.",
-        "- Each successful run should have a `summary.json`; many GNN runs also have per-seed logs and curve plots.",
-        "",
-        "## No-Leakage Rules",
-        "",
-        "- Do not train on `phase2` fraud labels when the goal is internal phase1 validation improvement.",
-        "- Do not allow later timestamps to influence earlier train batches in time-aware models.",
-        "- If using validation distribution information for weighting or adaptation, keep it unsupervised with respect to validation labels.",
     ]
+    for item in MODEL_FAMILY_NOTES:
+        lines.append(f"- `{item['name']}`: {item['summary']}")
+    lines.extend(
+        [
+            "",
+            "## Standard Comparison Workflow",
+            "",
+            "1. Confirm whether the idea is about data/split, features, fast tabular probes, or the online GNN stack.",
+            "2. If the idea can be tested with cached tabular features first, run the faster probe before a long GNN experiment.",
+            "3. Keep the split contract fixed unless the experiment is explicitly about evaluation design.",
+            "4. Record the exact command, run directory, and all changed knobs for every run worth keeping.",
+            "5. Compare `phase1_val_auc` first because that is the thesis target.",
+            "6. Compare `phase2_external_auc` second to reject brittle improvements.",
+            "7. Inspect logs and curves before concluding that a run failed to learn.",
+            "",
+            "## Suggested Comparison Template",
+            "",
+            "For every serious run, record:",
+            "",
+            "- model family and run name",
+            "- exact command",
+            "- whether EDA or features were rebuilt, and if so from which code state",
+            "- feature recipe / negative sampling / loss / sampler choices",
+            "- phase1 val AUC",
+            "- phase2 external AUC",
+            "- PR-AUC / AP if available",
+            "- training speed and stability notes",
+            "- whether the run is a fair ablation against a specific parent baseline",
+            "",
+            "## Reading Outputs",
+            "",
+            "- EDA outputs live under `experiment/outputs/eda/`.",
+            "- Feature caches live under `experiment/outputs/training/features/`.",
+            "- Model runs live under `experiment/outputs/training/models/<model>/<run_name>/`.",
+            "- Each successful run should have a `summary.json`.",
+            "- Many GNN runs also include `train.log`, `epoch_metrics.csv`, `metrics.jsonl`, and `training_curves.png`.",
+            "",
+            "## How To Decide If A Run Is Worth Keeping",
+            "",
+            "- Keep it if it improves phase1 validation AUC under a fair comparison.",
+            "- Keep it if validation is flat but the run reveals a clear speed, stability, or observability gain that future experiments can build on.",
+            "- Discard or archive it if it changes too many variables at once and cannot support a clean conclusion.",
+            "",
+            "## Common Mistakes",
+            "",
+            "- Comparing runs built from different feature caches without noting that change.",
+            "- Optimizing only phase2 external or only AP when the current thesis target is phase1 validation ROC-AUC.",
+            "- Forgetting that the main split is time-aware and therefore harder than a random split.",
+            "- Launching a long GNN run before a faster probe has tested whether the idea has any signal at all.",
+            "- Treating a tiny metric wobble as proof when the run is not matched against a disciplined baseline.",
+            "",
+            "## No-Leakage Rules",
+            "",
+            "- Do not train on `phase2` fraud labels when the goal is internal phase1 validation improvement.",
+            "- Do not allow later timestamps to influence earlier train batches in time-aware models.",
+            "- If using validation distribution information for weighting or adaptation, keep it unsupervised with respect to validation labels.",
+            "- If a feature is computed offline, verify that its aggregation window does not peek into future nodes or future labels.",
+        ]
+    )
     return "\n".join(lines) + "\n"
 
 
@@ -776,14 +1576,38 @@ def render_optimization_goals(results: dict[str, Any]) -> str:
     lines.extend(["", best_line, "", "## Open Optimization Directions", ""])
     for item in OPEN_DIRECTIONS:
         lines.append(f"- {item}")
+    lines.extend(["", "## Current Best By Family", ""])
+    for family, row in sorted(results.get("best_by_family", {}).items()):
+        val_auc = "n/a" if row["val_auc"] is None else f"{row['val_auc']:.6f}"
+        ext_auc = "n/a" if row["external_auc"] is None else f"{row['external_auc']:.6f}"
+        lines.append(f"- `{family}`: val_auc={val_auc}, external_auc={ext_auc}, path=`{row['path']}`")
     lines.extend(
         [
+            "",
+            "## Success Ladder",
+            "",
+            "- `<0.79`: still in the current plateau region.",
+            "- `0.80+`: meaningful evidence that the new idea is improving phase1 time-split generalization.",
+            "- `0.82+`: current user-mandated thesis target.",
+            "- `0.82+` with stable external AUC: strong candidate direction worth deeper ablation.",
+            "",
+            "## What Counts As A Real Improvement",
+            "",
+            "- The run should be compared against a clear baseline with the same split and broadly the same feature generation state.",
+            "- A validation gain that destroys external AUC is not a trustworthy thesis direction.",
+            "- A speed or observability gain is useful, but it is not a substitute for the main AUC target unless explicitly framed as infrastructure work.",
             "",
             "## Current Bottleneck Interpretation",
             "",
             "- The project is not obviously failing to fit. Instead, it quickly saturates under a severe time-shifted validation regime.",
             "- Simple extra tabular features and naive graph propagation improved little; relation-specific averaging and covariate-shift weighting were not enough in their current forms.",
             "- This means future work should focus on stronger temporal / relation inductive bias, better sampling, or cleaner graph-tabular hybridization rather than only longer training.",
+            "",
+            "## Priority Order For Future Work",
+            "",
+            "- First priority: changes that directly address time-shift generalization without leakage.",
+            "- Second priority: faster probes that can cheaply reject weak ideas before long neural runs.",
+            "- Third priority: backbone modernization such as stronger attention or Transformer-like blocks, but only if the data/sampling interface is not the real bottleneck.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -795,15 +1619,27 @@ def render_results_ledger(results: dict[str, Any]) -> str:
         "",
         "Rows are sorted by validation AUC descending from saved `summary.json` files under `experiment/outputs/training/models/`.",
         "",
-        "| Rank | Path | Val AUC | External AUC | Val AP |",
-        "| --- | --- | ---: | ---: | ---: |",
+        "## Best Run Per Family",
+        "",
     ]
+    for family, row in sorted(results.get("best_by_family", {}).items()):
+        val_auc = "n/a" if row["val_auc"] is None else f"{row['val_auc']:.6f}"
+        external_auc = "n/a" if row["external_auc"] is None else f"{row['external_auc']:.6f}"
+        lines.append(f"- `{family}`: val_auc={val_auc}, external_auc={external_auc}, path=`{row['path']}`")
+    lines.extend(
+        [
+        "",
+        "| Rank | Family | Run | Path | Val AUC | External AUC | Val AP |",
+        "| --- | --- | --- | --- | ---: | ---: | ---: |",
+    ])
     rows = results["rows"][:20]
     for idx, row in enumerate(rows, start=1):
         val_auc = "n/a" if row["val_auc"] is None else f"{row['val_auc']:.6f}"
         external_auc = "n/a" if row["external_auc"] is None else f"{row['external_auc']:.6f}"
         val_ap = "n/a" if row["val_ap"] is None else f"{row['val_ap']:.6f}"
-        lines.append(f"| {idx} | `{row['path']}` | {val_auc} | {external_auc} | {val_ap} |")
+        lines.append(
+            f"| {idx} | `{row['family']}` | `{row['run_name']}` | `{row['path']}` | {val_auc} | {external_auc} | {val_ap} |"
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -871,16 +1707,27 @@ def render_sync_status(project_root: Path, dataset: dict[str, Any], results: dic
 
 def sync_once(project_root: Path, skill_root: Path, args: argparse.Namespace) -> dict[str, Any]:
     references_dir = ensure_dir(skill_root / "references")
+    for stale in references_dir.glob("module-guide__*.md"):
+        stale.unlink(missing_ok=True)
     structure = collect_project_structure(project_root)
     dataset = collect_dataset_summary(project_root)
     code_inventory = collect_code_inventory(project_root)
     results = collect_results(project_root)
     recent_changes = update_recent_changes(skill_root, project_root, args)
 
+    write_text(references_dir / "project-handbook.md", render_project_handbook(structure))
     write_text(references_dir / "project-overview.md", render_project_overview(structure))
     write_text(references_dir / "dataset-profile.md", render_dataset_profile(dataset))
+    write_text(references_dir / "experiment-architecture.md", render_experiment_architecture())
     write_text(references_dir / "experiment-code-map.md", render_code_map(code_inventory))
     write_text(references_dir / "experiment-playbook.md", render_experiment_playbook(project_root))
+    write_text(references_dir / "module-update-hotspots.md", render_module_update_hotspots())
+    write_text(references_dir / "module-guides-index.md", render_module_guides_index(code_inventory))
+    for file_info in code_inventory:
+        write_text(
+            references_dir / module_guide_filename(str(file_info["path"])),
+            render_module_guide(file_info),
+        )
     write_text(references_dir / "optimization-goals.md", render_optimization_goals(results))
     write_text(references_dir / "experiment-results-ledger.md", render_results_ledger(results))
     write_text(references_dir / "recent-change-memory.md", render_recent_changes(recent_changes))
@@ -945,6 +1792,8 @@ def watch(project_root: Path, skill_root: Path, args: argparse.Namespace) -> Non
         fingerprint = hash_manifest(manifest)
         if fingerprint != last_fingerprint:
             sync_once(project_root, skill_root, args)
+            if args.mirror_installed_copy:
+                mirror_installed_copy(skill_root)
             last_fingerprint = fingerprint
         time.sleep(max(args.interval, 1.0))
 

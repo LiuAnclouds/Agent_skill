@@ -2,45 +2,49 @@
 
 This document is generated from the live repository. It focuses on `experiment/` because that is the benchmark and thesis core.
 
-## `experiment/eda/__init__.py`
-
-Purpose: Project module inside experiment/.
-
-No top-level symbols found.
+Use this file as the fast index. For deeper per-file explanations, jump to `references/module-guides-index.md` and then open the guide for the target module.
 
 ## `experiment/eda/analysis.py`
 
 Purpose: Run the reproducible EDA stack: overview, feature profile, graph statistics, temporal behavior, drift checks, and the recommended time-aware split.
 
+When to read: Read this file when you need to understand where the recommended train/val split comes from, why the current validation regime is time-aware, or how the generated EDA artifacts are produced.
+
+Inventory summary: 0 classes, 24 top-level functions, 0 documented methods.
+
 Top-level symbols:
-- `configure_matplotlib() -> None` [function] lines 25-33: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `ensure_dir(path: Path) -> Path` [function] lines 36-38: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `write_csv(path: Path, rows: list[dict[str, Any]]) -> None` [function] lines 41-56: Artifact-writing helper used to persist outputs for later reuse.
-- `write_json(path: Path, payload: dict[str, Any]) -> None` [function] lines 59-64: Artifact-writing helper used to persist outputs for later reuse.
-- `write_square_csv(path: Path, headers: list[str], matrix: np.ndarray) -> None` [function] lines 67-73: Artifact-writing helper used to persist outputs for later reuse.
-- `label_name(label: int) -> str` [function] lines 76-77: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `quantile_row(prefix: str, values: np.ndarray) -> dict[str, float]` [function] lines 80-86: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `basic_stats(values: np.ndarray) -> dict[str, float]` [function] lines 89-97: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `sample_values(values: np.ndarray, seed: int, max_size: int = PLOT_SAMPLE_SIZE) -> np.ndarray` [function] lines 100-105: Sampling helper used to create local subgraphs, negatives, or reduced node subsets.
-- `plot_empirical_cdf(ax: plt.Axes, values: np.ndarray, label: str, color: str) -> None` [function] lines 108-114: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `build_time_windows(values: np.ndarray, n_windows: int = TIME_WINDOW_COUNT) -> list[dict[str, Any]]` [function] lines 117-139: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
-- `build_phase_output_dir(outdir: Path, phase: str) -> Path` [function] lines 142-143: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
-- `get_train_target(data: PhaseData) -> tuple[np.ndarray, np.ndarray]` [function] lines 146-148: Training helper that optimizes the current model on the project split.
-- `analyze_overview(data: PhaseData, outdir: Path) -> dict[str, Any]` [function] lines 151-198: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `analyze_features(data: PhaseData, outdir: Path, temporal_core: dict[str, np.ndarray] | None = None) -> tuple[list[dict[str, Any]], dict[str, Any]]` [function] lines 201-457: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `compute_degree_arrays(data: PhaseData) -> tuple[np.ndarray, np.ndarray, np.ndarray]` [function] lines 460-466: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `compute_temporal_core(data: PhaseData) -> dict[str, np.ndarray]` [function] lines 469-492: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `analyze_graph(data: PhaseData, outdir: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]` [function] lines 495-724: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `analyze_temporal(data: PhaseData, outdir: Path, temporal_core: dict[str, np.ndarray] | None = None) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, np.ndarray]]` [function] lines 727-828: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `_psi(reference: np.ndarray, current: np.ndarray, bins: np.ndarray) -> float` [function] lines 831-839: Private helper used internally by this module; read together with its callers.
-- `_build_drift_bins(values: np.ndarray, n_bins: int = DRIFT_BIN_COUNT) -> np.ndarray` [function] lines 842-853: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
-- `analyze_drift(outdir: Path) -> tuple[list[dict[str, Any]], str]` [function] lines 856-946: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `build_recommended_split(outdir: Path, temporal_core: dict[str, np.ndarray] | None = None) -> dict[str, Any]` [function] lines 949-1022: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
-- `run_eda(phases: list[str], analyses: list[str], outdir: Path) -> dict[str, Any]` [function] lines 1025-1090: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
+- `configure_matplotlib() -> None` [function] lines 25-33: Set a font stack that can render Chinese labels in generated plots and keep minus signs readable.
+- `ensure_dir(path: Path) -> Path` [function] lines 36-38: Create an artifact directory if missing and return the same path for chained writes.
+- `write_csv(path: Path, rows: list[dict[str, Any]]) -> None` [function] lines 41-56: Write a list of dict rows into a UTF-8 CSV artifact with stable field ordering.
+- `write_json(path: Path, payload: dict[str, Any]) -> None` [function] lines 59-64: Persist a JSON summary artifact for later reuse by training or reporting code.
+- `write_square_csv(path: Path, headers: list[str], matrix: np.ndarray) -> None` [function] lines 67-73: Write a square matrix such as a correlation or PSI-style table with row and column headers.
+- `label_name(label: int) -> str` [function] lines 76-77: Map numeric dataset labels to readable names like normal, fraud, and background classes.
+- `quantile_row(prefix: str, values: np.ndarray) -> dict[str, float]` [function] lines 80-86: Convert one numeric vector into a prefixed quantile-stat dict row for CSV summaries.
+- `basic_stats(values: np.ndarray) -> dict[str, float]` [function] lines 89-97: Return a compact statistics dict used inside EDA summaries.
+- `sample_values(values: np.ndarray, seed: int, max_size: int = PLOT_SAMPLE_SIZE) -> np.ndarray` [function] lines 100-105: Downsample large vectors for plotting so EDA remains tractable on million-scale data.
+- `plot_empirical_cdf(ax: plt.Axes, values: np.ndarray, label: str, color: str) -> None` [function] lines 108-114: Draw an empirical CDF curve on an existing matplotlib axis.
+- `build_time_windows(values: np.ndarray, n_windows: int = TIME_WINDOW_COUNT) -> list[dict[str, Any]]` [function] lines 117-139: Split a time-like vector into quantile-based windows for later temporal summaries.
+- `build_phase_output_dir(outdir: Path, phase: str) -> Path` [function] lines 142-143: Create the output subdirectory for a specific phase under the EDA output root.
+- `get_train_target(data: PhaseData) -> tuple[np.ndarray, np.ndarray]` [function] lines 146-148: Return the official supervised node ids and labels for one dataset phase.
+- `analyze_overview(data: PhaseData, outdir: Path) -> dict[str, Any]` [function] lines 151-198: Produce the high-level size, label, edge-type, and train/test distribution summary for one phase.
+- `analyze_features(data: PhaseData, outdir: Path, temporal_core: dict[str, np.ndarray] | None = None) -> tuple[list[dict[str, Any]], dict[str, Any]]` [function] lines 201-457: Profile raw feature distributions, missingness, normal-vs-fraud gaps, and per-group missing patterns.
+- `compute_degree_arrays(data: PhaseData) -> tuple[np.ndarray, np.ndarray, np.ndarray]` [function] lines 460-466: Compute indegree, outdegree, and total degree arrays from the raw edge list.
+- `compute_temporal_core(data: PhaseData) -> dict[str, np.ndarray]` [function] lines 469-492: Compute first_active, last_active, and active_span arrays used throughout EDA and feature building.
+- `analyze_graph(data: PhaseData, outdir: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]` [function] lines 495-724: Profile graph structure, background-node effects, degree patterns, and edge-type behavior.
+- `analyze_temporal(data: PhaseData, outdir: Path, temporal_core: dict[str, np.ndarray] | None = None) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, np.ndarray]]` [function] lines 727-828: Profile node activity over time, time windows, and train-class temporal behavior.
+- `_psi(reference: np.ndarray, current: np.ndarray, bins: np.ndarray) -> float` [function] lines 831-839: Compute a population stability style drift score between reference and current distributions.
+- `_build_drift_bins(values: np.ndarray, n_bins: int = DRIFT_BIN_COUNT) -> np.ndarray` [function] lines 842-853: Create quantile-based bins for drift calculations.
+- `analyze_drift(outdir: Path) -> tuple[list[dict[str, Any]], str]` [function] lines 856-946: Compare phase1 and phase2 feature drift and write a drift summary report.
+- `build_recommended_split(outdir: Path, temporal_core: dict[str, np.ndarray] | None = None) -> dict[str, Any]` [function] lines 949-1022: Create the project's leakage-safe time-aware phase1 train/val split and phase2 external evaluation ids.
+- `run_eda(phases: list[str], analyses: list[str], outdir: Path) -> dict[str, Any]` [function] lines 1025-1090: Execute the requested EDA stages, aggregate summaries, and persist the full artifact bundle.
 
 ## `experiment/eda/data_loader.py`
 
 Purpose: Resolve the XinYe dataset paths, flatten arrays, validate schema assumptions, and load one phase into a typed PhaseData container.
+
+When to read: Read this file first when dataset paths change or when the repository needs to support more datasets.
+
+Inventory summary: 1 classes, 4 top-level functions, 2 documented methods.
 
 Top-level symbols:
 - `PhaseData` [class] lines 24-41: Immutable in-memory bundle for one dataset phase, including node features, labels, edges, timestamps, and official train/test node ids.
@@ -55,19 +59,21 @@ Top-level symbols:
 
 Purpose: CLI entrypoint for the EDA pipeline.
 
+When to read: Read this file when you need the exact EDA CLI surface or want to add a new user-facing EDA command-line option.
+
+Inventory summary: 0 classes, 2 top-level functions, 0 documented methods.
+
 Top-level symbols:
 - `parse_args() -> argparse.Namespace` [function] lines 15-38: Parse CLI flags for phase selection, analysis modules, and output directory.
 - `main() -> None` [function] lines 41-46: Entrypoint that expands phase selection and launches run_eda().
 
-## `experiment/training/__init__.py`
-
-Purpose: Project module inside experiment/.
-
-No top-level symbols found.
-
 ## `experiment/training/common.py`
 
 Purpose: Shared training utilities for paths, metrics, split loading, seeding, prediction saving, and device resolution.
+
+When to read: Read this file when a training change needs new shared metrics, new split loading, or reusable IO helpers.
+
+Inventory summary: 1 classes, 13 top-level functions, 0 documented methods.
 
 Top-level symbols:
 - `ExperimentSplit` [class] lines 24-29: Container for the recommended phase1 train/val ids plus the phase2 external evaluation ids.
@@ -88,6 +94,10 @@ Top-level symbols:
 ## `experiment/training/features.py`
 
 Purpose: Offline feature-cache and graph-cache builder plus runtime FeatureStore and GraphCache readers.
+
+When to read: Read this file before touching model input features, feature normalization, graph cache layout, or any offline build logic.
+
+Inventory summary: 3 classes, 16 top-level functions, 6 documented methods.
 
 Top-level symbols:
 - `GraphCache` [class] lines 25-41: Runtime bundle of CSR-like in/out adjacency arrays, edge metadata, and time-bucket annotations.
@@ -120,6 +130,10 @@ Top-level symbols:
 
 Purpose: LightGBM baseline wrapper used by the unified training CLI.
 
+When to read: Read this file when changing the LightGBM baseline behavior inside the unified training CLI.
+
+Inventory summary: 1 classes, 0 top-level functions, 6 documented methods.
+
 Top-level symbols:
 - `LightGBMExperiment` [class] lines 32-145: Wrapper around a LightGBM fraud classifier with fit/predict/save/load helpers aligned to this project.
   - `__init__(self, model_name: str, seed: int, feature_groups: list[str] | None = None, params: dict[str, Any] | None = None) -> None` [method] lines 33-48: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
@@ -133,52 +147,56 @@ Top-level symbols:
 
 Purpose: Graph sampling, relation-aware message passing layers, temporal encoders, training loop, logging, hard-negative mining, and GNN inference wrappers.
 
+When to read: Read this file when changing graph sampling, temporal handling, losses, hard negatives, the GNN backbone, logging, or inference behavior.
+
+Inventory summary: 14 classes, 15 top-level functions, 42 documented methods.
+
 Top-level symbols:
-- `GraphPhaseContext` [class] lines 34-38: Data container that groups runtime context required by later pipeline stages.
-- `GraphModelConfig` [class] lines 42-150: Structured class in the experiment pipeline; inspect the listed methods for its concrete role.
+- `GraphPhaseContext` [class] lines 34-38: Bundle one phase's feature store, graph cache, and labels so GNN training code can pass context as one object.
+- `GraphModelConfig` [class] lines 42-150: Serializable configuration object for sampling, loss, normalization, negative sampling, scheduler, and temporal sampling behavior.
   - `to_dict(self) -> dict[str, Any]` [method] lines 73-104: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `from_dict(cls, payload: dict[str, Any] | None) -> 'GraphModelConfig'` [method] lines 107-140: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `use_legacy_path(self) -> bool` [method] lines 142-150: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `SampledSubgraph` [class] lines 154-162: Structured class in the experiment pipeline; inspect the listed methods for its concrete role.
-- `TrainBatchStats` [class] lines 166-174: Structured class in the experiment pipeline; inspect the listed methods for its concrete role.
+- `SampledSubgraph` [class] lines 154-162: Container holding the local-node list, sampled edges, relation ids, timestamps, and local target indices for one subgraph batch.
+- `TrainBatchStats` [class] lines 166-174: Per-batch summary values used in training logs such as sampled subgraph size and positive rate.
   - `positive_rate(self) -> float` [method] lines 173-174: Training helper that optimizes the current model on the project split.
-- `_append_text_line(path: Path, line: str) -> None` [function] lines 177-181: Private helper used internally by this module; read together with its callers.
-- `_append_jsonl(path: Path, payload: dict[str, Any]) -> None` [function] lines 184-188: Private helper used internally by this module; read together with its callers.
-- `_write_history_csv(path: Path, rows: list[dict[str, Any]]) -> None` [function] lines 191-199: Artifact-writing helper used to persist outputs for later reuse.
-- `_plot_training_curves(path: Path, rows: list[dict[str, Any]]) -> str | None` [function] lines 202-256: Training helper that optimizes the current model on the project split.
-- `_sample_edge_indices(edge_timestamp: np.ndarray, fanout: int, rng: np.random.Generator, snapshot_end: int | None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> np.ndarray` [function] lines 259-325: Sampling helper used to create local subgraphs, negatives, or reduced node subsets.
-- `sample_relation_subgraph(graph: GraphCache, seed_nodes: np.ndarray, fanouts: list[int], rng: np.random.Generator, snapshot_end: int | None = None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> SampledSubgraph` [function] lines 328-460: Sampling helper used to create local subgraphs, negatives, or reduced node subsets.
-- `_sample_single_seed_subgraph(graph: GraphCache, seed: int, fanouts: list[int], rng: np.random.Generator, snapshot_end: int | None = None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> SampledSubgraph` [function] lines 463-581: Sampling helper used to create local subgraphs, negatives, or reduced node subsets.
-- `sample_batched_relation_subgraphs(graph: GraphCache, seed_nodes: np.ndarray, fanouts: list[int], rng: np.random.Generator, snapshot_end: int | None = None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> SampledSubgraph` [function] lines 584-653: Sampling helper used to create local subgraphs, negatives, or reduced node subsets.
-- `TimeEncoder` [class] lines 656-666: Structured class in the experiment pipeline; inspect the listed methods for its concrete role.
+- `_append_text_line(path: Path, line: str) -> None` [function] lines 177-181: Append one human-readable log line to a training log file.
+- `_append_jsonl(path: Path, payload: dict[str, Any]) -> None` [function] lines 184-188: Append one JSON event line to a jsonl metrics file.
+- `_write_history_csv(path: Path, rows: list[dict[str, Any]]) -> None` [function] lines 191-199: Materialize the accumulated epoch history as a CSV file.
+- `_plot_training_curves(path: Path, rows: list[dict[str, Any]]) -> str | None` [function] lines 202-256: Render loss and metric curves from the stored epoch history.
+- `_sample_edge_indices(edge_timestamp: np.ndarray, fanout: int, rng: np.random.Generator, snapshot_end: int | None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> np.ndarray` [function] lines 259-325: Choose legal edge indices for one frontier node under fanout and optional temporal cutoff constraints.
+- `sample_relation_subgraph(graph: GraphCache, seed_nodes: np.ndarray, fanouts: list[int], rng: np.random.Generator, snapshot_end: int | None = None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> SampledSubgraph` [function] lines 328-460: Sample a relation-aware local subgraph around one batch of seed nodes.
+- `_sample_single_seed_subgraph(graph: GraphCache, seed: int, fanouts: list[int], rng: np.random.Generator, snapshot_end: int | None = None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> SampledSubgraph` [function] lines 463-581: Fast path for single-seed meanmax pooling cases to reduce repeated list / dict construction.
+- `sample_batched_relation_subgraphs(graph: GraphCache, seed_nodes: np.ndarray, fanouts: list[int], rng: np.random.Generator, snapshot_end: int | None = None, sampler: str = 'uniform', recent_window: int = 50, recent_ratio: float = 0.8, training: bool = True) -> SampledSubgraph` [function] lines 584-653: Sample multiple seed-node subgraphs together and pack them for batched processing.
+- `TimeEncoder` [class] lines 656-666: Sinusoidal-like time encoding module used to inject edge-time information into temporal models.
   - `__init__(self, out_dim: int) -> None` [method] lines 657-663: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `forward(self, relative_time: torch.Tensor) -> torch.Tensor` [method] lines 665-666: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `SafeBatchNorm1d` [class] lines 669-677: Structured class in the experiment pipeline; inspect the listed methods for its concrete role.
+- `SafeBatchNorm1d` [class] lines 669-677: BatchNorm wrapper that avoids pathological behavior on very small batches.
   - `__init__(self, dim: int) -> None` [method] lines 670-672: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `forward(self, x: torch.Tensor) -> torch.Tensor` [method] lines 674-677: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `_make_norm(kind: str, dim: int) -> nn.Module` [function] lines 680-685: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
-- `_compute_grad_norm(parameters: Any) -> float` [function] lines 688-695: Private helper used internally by this module; read together with its callers.
-- `_focal_bce_with_logits(logits: torch.Tensor, targets: torch.Tensor, pos_weight: torch.Tensor | None, gamma: float, alpha: float) -> torch.Tensor` [function] lines 698-718: Private helper used internally by this module; read together with its callers.
-- `_pairwise_ranking_loss(logits: torch.Tensor, targets: torch.Tensor, margin: float) -> torch.Tensor` [function] lines 721-731: Private helper used internally by this module; read together with its callers.
-- `_dirichlet_energy(x: torch.Tensor, edge_src: torch.Tensor, edge_dst: torch.Tensor) -> torch.Tensor` [function] lines 734-742: Private helper used internally by this module; read together with its callers.
-- `_pool_mean_max(values: torch.Tensor, group_ids: torch.Tensor, num_groups: int) -> tuple[torch.Tensor, torch.Tensor]` [function] lines 745-785: Private helper used internally by this module; read together with its callers.
-- `_segment_softmax(scores: torch.Tensor, group_ids: torch.Tensor, num_groups: int) -> torch.Tensor` [function] lines 788-813: Private helper used internally by this module; read together with its callers.
-- `RelationSAGELayer` [class] lines 816-857: Neural-network building block used inside the graph model stack.
+- `_make_norm(kind: str, dim: int) -> nn.Module` [function] lines 680-685: Factory for layer norm, safe batch norm, or identity normalization.
+- `_compute_grad_norm(parameters: Any) -> float` [function] lines 688-695: Measure gradient norm for monitoring and optional clipping diagnostics.
+- `_focal_bce_with_logits(logits: torch.Tensor, targets: torch.Tensor, pos_weight: torch.Tensor | None, gamma: float, alpha: float) -> torch.Tensor` [function] lines 698-718: Compute the focal BCE variant used when focal loss is enabled.
+- `_pairwise_ranking_loss(logits: torch.Tensor, targets: torch.Tensor, margin: float) -> torch.Tensor` [function] lines 721-731: Compute the ranking term used when ranking-enhanced losses are enabled.
+- `_dirichlet_energy(x: torch.Tensor, edge_src: torch.Tensor, edge_dst: torch.Tensor) -> torch.Tensor` [function] lines 734-742: Compute a smoothness-style graph regularity diagnostic on embeddings.
+- `_pool_mean_max(values: torch.Tensor, group_ids: torch.Tensor, num_groups: int) -> tuple[torch.Tensor, torch.Tensor]` [function] lines 745-785: Build the mean/max pooled subgraph head input for target-node or subgraph fusion logic.
+- `_segment_softmax(scores: torch.Tensor, group_ids: torch.Tensor, num_groups: int) -> torch.Tensor` [function] lines 788-813: Compute softmax values inside grouped edge segments for attention-style aggregation.
+- `RelationSAGELayer` [class] lines 816-857: Relation-aware SAGE message-passing layer used by the baseline GraphSAGE stack.
   - `__init__(self, in_dim: int, out_dim: int, num_relations: int, rel_dim: int, time_dim: int = 0) -> None` [method] lines 817-830: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `forward(self, x: torch.Tensor, edge_src: torch.Tensor, edge_dst: torch.Tensor, rel_ids: torch.Tensor, time_feature: torch.Tensor | None = None) -> torch.Tensor` [method] lines 832-857: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `ModernRelationBlock` [class] lines 860-944: Neural-network building block used inside the graph model stack.
+- `ModernRelationBlock` [class] lines 860-944: Modernized relation block with residual / FFN / normalization options for temporal GraphSAGE variants.
   - `__init__(self, hidden_dim: int, edge_dim: int, dropout: float, norm: str, residual: bool, ffn: bool, edge_encoder: str) -> None` [method] lines 861-902: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `forward(self, x: torch.Tensor, edge_src: torch.Tensor, edge_dst: torch.Tensor, edge_emb: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]` [method] lines 904-944: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `ModernRelationAttentionBlock` [class] lines 947-1029: Neural-network building block used inside the graph model stack.
+- `ModernRelationAttentionBlock` [class] lines 947-1029: Attention-based relation block used by the temporal GAT variant.
   - `__init__(self, hidden_dim: int, edge_dim: int, dropout: float, norm: str, residual: bool, ffn: bool, edge_encoder: str) -> None` [method] lines 948-995: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `forward(self, x: torch.Tensor, edge_src: torch.Tensor, edge_dst: torch.Tensor, edge_emb: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]` [method] lines 997-1029: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `RelationGraphSAGENetwork` [class] lines 1032-1335: Neural-network building block used inside the graph model stack.
+- `RelationGraphSAGENetwork` [class] lines 1032-1335: Top-level neural network that stacks relation blocks and produces logits for target nodes.
   - `__init__(self, input_dim: int, hidden_dim: int, num_layers: int, num_relations: int, rel_dim: int, dropout: float, temporal: bool, model_config: GraphModelConfig, aggregator_type: str = 'sage') -> None` [method] lines 1033-1120: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `_build_edge_embedding(self, x: torch.Tensor, rel_ids: torch.Tensor, edge_relative_time: torch.Tensor | None) -> tuple[torch.Tensor | None, torch.Tensor | None]` [method] lines 1122-1146: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
   - `_subgraph_stats(self, node_repr: torch.Tensor, target_local_idx: torch.Tensor, node_subgraph_id: torch.Tensor, edge_subgraph_id: torch.Tensor, edge_dst: torch.Tensor, rel_ids: torch.Tensor, edge_relative_time: torch.Tensor | None) -> torch.Tensor` [method] lines 1148-1207: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `_forward_subgraph_head(self, node_repr: torch.Tensor, edge_repr: torch.Tensor, target_local_idx: torch.Tensor, node_subgraph_id: torch.Tensor | None, edge_subgraph_id: torch.Tensor | None, edge_dst: torch.Tensor, rel_ids: torch.Tensor, edge_relative_time: torch.Tensor | None) -> torch.Tensor` [method] lines 1209-1262: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `forward(self, x: torch.Tensor, edge_src: torch.Tensor, edge_dst: torch.Tensor, rel_ids: torch.Tensor, edge_relative_time: torch.Tensor | None, target_local_idx: torch.Tensor, node_subgraph_id: torch.Tensor | None = None, edge_subgraph_id: torch.Tensor | None = None, return_details: bool = False) -> torch.Tensor | tuple[torch.Tensor, dict[str, float]]` [method] lines 1264-1335: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `BaseGraphSAGEExperiment` [class] lines 1338-2484: Experiment wrapper that holds configuration plus fit / predict / save lifecycle helpers.
+- `BaseGraphSAGEExperiment` [class] lines 1338-2484: Main training / inference wrapper for graph models, including batch building, hard negatives, losses, logging, save/load, and evaluation.
   - `__init__(self, model_name: str, seed: int, input_dim: int, num_relations: int, max_day: int, feature_groups: list[str] | None = None, hidden_dim: int = 128, num_layers: int = 2, rel_dim: int = 32, fanouts: list[int] | None = None, batch_size: int = 1024, epochs: int = 4, learning_rate: float = 0.001, weight_decay: float = 1e-05, dropout: float = 0.2, device: str | None = None, temporal: bool = False, aggregator_type: str = 'sage', graph_config: GraphModelConfig | None = None, feature_normalizer_state: HybridFeatureNormalizerState | None = None) -> None` [method] lines 1339-1395: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `_hard_negative_pool_key(self, snapshot_end: int | None) -> int` [method] lines 1397-1398: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
   - `_hard_negative_enabled(self) -> bool` [method] lines 1400-1404: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
@@ -195,20 +213,24 @@ Top-level symbols:
   - `_build_train_batches(self, context: GraphPhaseContext, node_ids: np.ndarray, rng: np.random.Generator) -> tuple[list[tuple[np.ndarray, np.ndarray, int | None]], TrainBatchStats]` [method] lines 1869-1927: Builder helper that assembles the next-stage object, feature block, or configuration bundle.
   - `_sample_batch_subgraph(self, graph: GraphCache, batch_nodes: np.ndarray, rng: np.random.Generator, snapshot_end: int | None, training: bool) -> SampledSubgraph` [method] lines 1929-1953: Sampling helper used to create local subgraphs, negatives, or reduced node subsets.
   - `_tensorize_subgraph(self, context: GraphPhaseContext, subgraph: SampledSubgraph, snapshot_end: int | None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor | None, torch.Tensor, torch.Tensor | None, torch.Tensor | None]` [method] lines 1955-2019: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-  - `fit(self, context: GraphPhaseContext, train_ids: np.ndarray, val_ids: np.ndarray, artifact_dir: Path | None = None) -> dict[str, float]` [method] lines 2021-2333: Training helper that optimizes the current model on the project split.
-  - `predict_proba(self, context: GraphPhaseContext, node_ids: np.ndarray, batch_seed: int | None = None, progress_desc: str | None = None, show_progress: bool = True) -> np.ndarray` [method] lines 2336-2406: Inference helper that converts a fitted model into fraud probabilities or scores.
-  - `save(self, run_dir: Path) -> None` [method] lines 2408-2435: Artifact-writing helper used to persist outputs for later reuse.
-  - `load(cls, run_dir: Path, input_dim: int, num_relations: int, device: str | None = None) -> 'BaseGraphSAGEExperiment'` [method] lines 2438-2484: Load helper that restores data, configuration, or saved artifacts from disk.
-- `RelationGraphSAGEExperiment` [class] lines 2487-2491: Experiment wrapper that holds configuration plus fit / predict / save lifecycle helpers.
+  - `fit(self, context: GraphPhaseContext, train_ids: np.ndarray, val_ids: np.ndarray, artifact_dir: Path | None = None) -> dict[str, float]` [method] lines 2021-2333: Run the full multi-epoch graph training loop, logging metrics and early-stopping on phase1 validation AUC.
+  - `predict_proba(self, context: GraphPhaseContext, node_ids: np.ndarray, batch_seed: int | None = None, progress_desc: str | None = None, show_progress: bool = True) -> np.ndarray` [method] lines 2336-2406: Run batched subgraph inference and return probabilities for the requested node ids.
+  - `save(self, run_dir: Path) -> None` [method] lines 2408-2435: Persist graph model weights and metadata.
+  - `load(cls, run_dir: Path, input_dim: int, num_relations: int, device: str | None = None) -> 'BaseGraphSAGEExperiment'` [method] lines 2438-2484: Restore a saved graph experiment from disk.
+- `RelationGraphSAGEExperiment` [class] lines 2487-2491: Concrete static relation GraphSAGE experiment wrapper.
   - `__init__(self, *args: Any, **kwargs: Any) -> None` [method] lines 2488-2491: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `TemporalRelationGraphSAGEExperiment` [class] lines 2494-2498: Experiment wrapper that holds configuration plus fit / predict / save lifecycle helpers.
+- `TemporalRelationGraphSAGEExperiment` [class] lines 2494-2498: Concrete temporal GraphSAGE experiment wrapper.
   - `__init__(self, *args: Any, **kwargs: Any) -> None` [method] lines 2495-2498: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
-- `TemporalRelationGATExperiment` [class] lines 2501-2505: Experiment wrapper that holds configuration plus fit / predict / save lifecycle helpers.
+- `TemporalRelationGATExperiment` [class] lines 2501-2505: Concrete temporal relation attention experiment wrapper.
   - `__init__(self, *args: Any, **kwargs: Any) -> None` [method] lines 2502-2505: Top-level utility in this module; use the signature and file purpose to understand where it fits in the pipeline.
 
 ## `experiment/training/run_training.py`
 
 Purpose: Unified CLI for build_features, LightGBM / GNN training, and prediction blending.
+
+When to read: Read this file when the user-facing training CLI changes, when a new model family is added to the main benchmark path, or when summary outputs need to change consistently.
+
+Inventory summary: 0 classes, 17 top-level functions, 0 documented methods.
 
 Top-level symbols:
 - `_path_repr(path: Path) -> str` [function] lines 53-57: Private helper used internally by this module; read together with its callers.
@@ -233,6 +255,10 @@ Top-level symbols:
 
 Purpose: GPU XGBoost exploration script for covariate-shift weighting between time-split train and val distributions.
 
+When to read: Read this file when testing unsupervised covariate-shift weighting between phase1 train and val.
+
+Inventory summary: 0 classes, 6 top-level functions, 0 documented methods.
+
 Top-level symbols:
 - `parse_args() -> argparse.Namespace` [function] lines 28-60: CLI argument parser for this module.
 - `_slice_node_ids(node_ids: np.ndarray, limit: int | None, seed: int) -> np.ndarray` [function] lines 63-68: Private helper used internally by this module; read together with its callers.
@@ -244,6 +270,10 @@ Top-level symbols:
 ## `experiment/training/run_xgb_graphprop.py`
 
 Purpose: GPU XGBoost exploration script for propagated graph features such as A*X and A^2*X style blocks.
+
+When to read: Read this file when exploring graph-propagated tabular feature blocks with CUDA XGBoost.
+
+Inventory summary: 0 classes, 10 top-level functions, 0 documented methods.
 
 Top-level symbols:
 - `parse_args() -> argparse.Namespace` [function] lines 33-95: CLI argument parser for this module.
@@ -260,6 +290,10 @@ Top-level symbols:
 ## `experiment/training/run_xgb_relmean.py`
 
 Purpose: GPU XGBoost exploration script for relation-specific neighbor mean features.
+
+When to read: Read this file when exploring relation-specific neighbor mean features with CUDA XGBoost.
+
+Inventory summary: 0 classes, 10 top-level functions, 0 documented methods.
 
 Top-level symbols:
 - `parse_args() -> argparse.Namespace` [function] lines 33-78: CLI argument parser for this module.
