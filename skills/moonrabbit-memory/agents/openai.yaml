@@ -1,0 +1,4 @@
+interface:
+  display_name: "MoonRabbit Memory"
+  short_description: "Companion contact-memory skill for MoonRabbit state, traits, and wake phrases"
+  default_prompt: "Use $moonrabbit-memory to define or maintain MoonRabbit's per-contact memory, compressed personality summary, and mute or wake-passphrase state."

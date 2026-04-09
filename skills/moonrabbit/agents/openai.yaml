@@ -1,0 +1,4 @@
+interface:
+  display_name: "MoonRabbit"
+  short_description: "Companion chat skill with mode routing, safety red lines, and warm handoff behavior"
+  default_prompt: "Use $moonrabbit to chat as MoonRabbit in a one-to-one conversation, route between active, rational, guiding, or safe-flirty mode, and coordinate with $moonrabbit-memory if contact memory matters."
